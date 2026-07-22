@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Tape — Trading Journal & Blog</title>
+  <meta name="description" content="A minimalist, pure-text trading journey blog and daily execution journal documenting strategy, risk management, and post-mortems.">
+  
+  <!-- Google Fonts: Newsreader (Serif Header/Body), Inter (UI), JetBrains Mono (Tickers & Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Announcement / Live Stats Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="journal-tagline">
+        <span class="live-pulse"></span>
+        <span class="tagline-text">JOURNAL LOG &bull; PURE TEXT TRADING DIARY</span>
+      </div>
+      <div class="top-stats" id="topStatsBar">
+        <!-- JS fills stats -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Main Navigation -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="brand">
+        <a href="#" class="brand-link" id="brandHomeLink">
+          <h1 class="brand-title">THE TAPE<span>.</span></h1>
+          <p class="brand-subtitle">Trading Journey & Execution Journal</p>
+        </a>
+      </div>
+
+      <div class="header-actions">
+        <!-- Search Input -->
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search posts, $tickers, strategies..." autocomplete="off">
+          <kbd class="search-shortcut">⌘K</kbd>
+        </div>
+
+        <button class="btn btn-primary" id="btnOpenEditor">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Entry
+        </button>
+
+        <div class="dropdown">
+          <button class="btn btn-secondary icon-btn" id="btnSettings" title="Backup & Export">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-text">
+        <h2 class="hero-headline">Documenting market mechanics, execution discipline, and post-mortems in pure text.</h2>
+        <p class="hero-bio">
+          A personal, noise-free trading log. Tracking trade setups, emotional discipline, risk parameters, and PnL disconnects without financial fluff.
+        </p>
+      </div>
+
+      <div class="discipline-card">
+        <div class="card-header-mini">
+          <span class="mini-label">TRADER DISCIPLINE MANTRA</span>
+          <span class="mini-badge">SYSTEM ACTIVE</span>
+        </div>
+        <blockquote class="mantra-quote">
+          "Focus on flawless process execution. The profit curve is simply a trailing byproduct of discipline."
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Navigation Toolbar -->
+  <div class="filter-toolbar">
+    <div class="container filter-container">
+      <div class="filter-group categories-group">
+        <span class="filter-label">Category:</span>
+        <div class="pills-wrapper" id="categoryPills">
+          <button class="pill active" data-category="all">All Entries</button>
+          <button class="pill" data-category="Daily Recap">Daily Recap</button>
+          <button class="pill" data-category="Post-Mortem">Post-Mortem</button>
+          <button class="pill" data-category="Strategy & Rules">Strategy & Rules</button>
+          <button class="pill" data-category="Psychology">Psychology</button>
+        </div>
+      </div>
+
+      <div class="filter-group secondary-filters">
+        <div class="filter-subgroup">
+          <span class="filter-label">Outcome:</span>
+          <select id="outcomeFilter" class="select-input">
+            <option value="all">All Outcomes</option>
+            <option value="Win">Win (+)</option>
+            <option value="Loss">Loss (-)</option>
+            <option value="Break-Even">Break-Even (=)</option>
+            <option value="N/A">N/A / Note</option>
+          </select>
+        </div>
+
+        <div class="filter-subgroup">
+          <span class="filter-label">Ticker:</span>
+          <select id="tickerFilter" class="select-input">
+            <option value="all">All Tickers</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Feed Section -->
+  <main class="main-content">
+    <div class="container">
+      <div class="feed-header">
+        <span class="results-count" id="resultsCount">Showing 3 entries</span>
+        <div class="sort-wrapper">
+          <label for="sortOrder">Sort:</label>
+          <select id="sortOrder" class="select-input-sm">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Journal Posts Feed Container -->
+      <div class="posts-feed" id="postsFeed">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state hidden" id="emptyState">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+        <h3>No matching journal posts found</h3>
+        <p>Try clearing your search query or selecting a different category filter.</p>
+        <button class="btn btn-secondary" id="btnResetFilters">Reset Filters</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Article Reader Drawer / Modal -->
+  <div class="modal-overlay hidden" id="readerModalOverlay">
+    <div class="reader-drawer" id="readerDrawer">
+      <div class="reader-progress-container">
+        <div class="reader-progress-bar" id="readerProgressBar"></div>
+      </div>
+
+      <div class="drawer-header">
+        <div class="drawer-header-left">
+          <button class="btn-text" id="btnCloseReader">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Journal
+          </button>
+        </div>
+        <div class="drawer-header-right">
+          <button class="btn btn-secondary btn-sm" id="btnCopyMarkdown">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy Markdown
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btnDownloadMd">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            .MD File
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btnEditEntry">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <div class="reader-body container-narrow">
+        <div class="reader-meta-header" id="readerMetaHeader">
+          <!-- Filled by JS -->
+        </div>
+
+        <article class="prose-content" id="readerArticleContent">
+          <!-- Article HTML rendered by JS -->
+        </article>
+
+        <div class="article-footer">
+          <div class="footer-divider"></div>
+          <div class="article-tags-list" id="readerFooterTags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Markdown Post Editor Modal -->
+  <div class="modal-overlay hidden" id="editorModalOverlay">
+    <div class="modal-card editor-modal">
+      <div class="modal-header">
+        <h3 id="editorModalTitle">Create Daily Post</h3>
+        <button class="modal-close" id="btnCloseEditor">&times;</button>
+      </div>
+
+      <form id="editorForm" onsubmit="return false;">
+        <div class="editor-form-grid">
+          <div class="form-group full-width">
+            <label for="postTitle">Post Title *</label>
+            <input type="text" id="postTitle" placeholder="e.g. Daily Recap: Clean Execution on $BTC Breakout" required>
+          </div>
+
+          <div class="form-group">
+            <label for="postCategory">Category *</label>
+            <select id="postCategory" required>
+              <option value="Daily Recap">Daily Recap</option>
+              <option value="Post-Mortem">Post-Mortem</option>
+              <option value="Strategy & Rules">Strategy & Rules</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Market Outlook">Market Outlook</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="postOutcome">Trade Outcome</label>
+            <select id="postOutcome">
+              <option value="N/A">N/A / Note</option>
+              <option value="Win">Win (+)</option>
+              <option value="Loss">Loss (-)</option>
+              <option value="Break-Even">Break-Even (=)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="postTickers">Tickers (comma separated)</label>
+            <input type="text" id="postTickers" placeholder="e.g. $EURUSD, $BTC, $SPX">
+          </div>
+
+          <div class="form-group">
+            <label for="postDate">Date *</label>
+            <input type="date" id="postDate" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="postExcerpt">Short Excerpt / Summary</label>
+            <input type="text" id="postExcerpt" placeholder="Brief 1-2 sentence overview of this trading log entry">
+          </div>
+
+          <!-- Markdown Editor Toolbar & Area -->
+          <div class="form-group full-width editor-toolbar-wrapper">
+            <div class="editor-label-bar">
+              <label for="postContent">Markdown Content *</label>
+              <div class="editor-mode-toggle">
+                <button type="button" class="toggle-btn active" id="btnEditTab">Edit</button>
+                <button type="button" class="toggle-btn" id="btnPreviewTab">Live Preview</button>
+              </div>
+            </div>
+
+            <div class="editor-toolbar" id="editorToolbar">
+              <button type="button" class="tb-btn" data-syntax="h2">H2</button>
+              <button type="button" class="tb-btn" data-syntax="h3">H3</button>
+              <button type="button" class="tb-btn" data-syntax="bold"><b>B</b></button>
+              <button type="button" class="tb-btn" data-syntax="italic"><i>I</i></button>
+              <button type="button" class="tb-btn" data-syntax="quote">Quote</button>
+              <button type="button" class="tb-btn" data-syntax="checklist">Checklist</button>
+              <button type="button" class="tb-btn" data-syntax="code">Code Block</button>
+              <button type="button" class="tb-btn" data-syntax="table">Trade Table</button>
+            </div>
+
+            <div class="editor-input-container">
+              <textarea id="postContent" placeholder="Write your daily post in Markdown here...
+
+### Trade Metrics
+* **Ticker:** $EURUSD
+* **Direction:** Long
+* **Risk/Reward:** 1:2.5
+
+### Entry Rationale & Execution Notes
+Write your thoughts, chart levels, and post-trade reflections..." required></textarea>
+              <div id="editorPreview" class="prose-content hidden"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <input type="hidden" id="editingPostId" value="">
+          <button type="button" class="btn btn-secondary" id="btnCancelEditor">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSavePost">Publish Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Backup & Export Modal -->
+  <div class="modal-overlay hidden" id="settingsModalOverlay">
+    <div class="modal-card sm-modal">
+      <div class="modal-header">
+        <h3>Backup & Data Management</h3>
+        <button class="modal-close" id="btnCloseSettings">&times;</button>
+      </div>
+
+      <div class="modal-body-content">
+        <p class="text-muted">Export your trading journal entries to keep local backups, or import an existing JSON backup.</p>
+        
+        <div class="settings-action-card">
+          <div class="settings-action-info">
+            <strong>Export Journal (JSON)</strong>
+            <p>Download all journal entries as a single JSON file.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnExportJSON">Download JSON</button>
+        </div>
+
+        <div class="settings-action-card">
+          <div class="settings-action-info">
+            <strong>Import Journal (JSON)</strong>
+            <p>Load entries from a previously exported backup file.</p>
+          </div>
+          <label class="btn btn-secondary btn-sm file-upload-btn">
+            Import JSON
+            <input type="file" id="importJsonInput" accept=".json" class="hidden">
+          </label>
+        </div>
+
+        <div class="settings-action-card border-danger">
+          <div class="settings-action-info">
+            <strong class="text-danger">Reset to Default Seed Posts</strong>
+            <p>Restores initial demo entries (clears custom local changes).</p>
+          </div>
+          <button class="btn btn-danger-outline btn-sm" id="btnResetSeed">Reset Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="footer-logo">THE TAPE</span>
+        <span class="footer-copy">&copy; 2026 Trading Journey Blog. Built for pure text clarity. Vercel Ready.</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://vercel.com" target="_blank" rel="noopener" class="footer-link">Deploy to Vercel</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
