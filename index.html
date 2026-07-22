@@ -49,12 +49,12 @@
           <kbd class="search-shortcut">⌘K</kbd>
         </div>
 
-        <button class="btn btn-secondary btn-sm" id="btnPocketOptionLedger" title="Pocket Option Capital Flow">
+        <button class="btn btn-secondary btn-sm" id="btnPocketOptionLedger" title="Pocket Option Capital & Trades Analytics">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="1" x2="12" y2="23"></line>
             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
-          Pocket Option Cashflow
+          Pocket Option Hub
         </button>
 
         <!-- Admin Lock Indicator & Toggle -->
@@ -93,11 +93,11 @@
 
       <div class="discipline-card">
         <div class="card-header-mini">
-          <span class="mini-label">POCKET OPTION CAPITAL STATS</span>
-          <span class="mini-badge" id="securityBadge">LIVE SYNCED</span>
+          <span class="mini-label">POCKET OPTION HUB STATS</span>
+          <span class="mini-badge" id="securityBadge">SYNCED</span>
         </div>
         <div class="pocket-hero-stats" id="pocketHeroStats">
-          <!-- JS fills Pocket Option quick metrics -->
+          <!-- JS fills Pocket Option metrics -->
         </div>
       </div>
     </div>
@@ -173,15 +173,21 @@
     </div>
   </main>
 
-  <!-- Pocket Option Capital Ledger Modal -->
+  <!-- Pocket Option Hub Modal (Cashflow & Trade History Analytics) -->
   <div class="modal-overlay hidden" id="pocketLedgerModalOverlay">
     <div class="modal-card po-modal">
       <div class="modal-header">
-        <h3>💰 Pocket Option Deposits & Withdrawals Ledger</h3>
+        <h3>💰 Pocket Option Hub & Analytics</h3>
         <button class="modal-close" id="btnClosePocketLedger">&times;</button>
       </div>
 
-      <div class="modal-body-content" style="max-height:75vh; overflow-y:auto;">
+      <div class="po-hub-tabs">
+        <button class="po-tab-btn active" id="btnTabCashflow">Deposits & Withdrawals</button>
+        <button class="po-tab-btn" id="btnTabTradeHistory">Trade Executions (CSV History)</button>
+      </div>
+
+      <!-- Tab 1: Deposits & Withdrawals Cashflow -->
+      <div class="modal-body-content" id="poTabCashflowContent" style="max-height:70vh; overflow-y:auto;">
         <div class="po-stats-summary-grid">
           <div class="po-stat-card">
             <span class="po-stat-label">TOTAL DEPOSITED</span>
@@ -203,9 +209,9 @@
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; margin-bottom:0.75rem;">
-          <h4 style="font-family:var(--font-serif); font-size:1.1rem;">Transaction History (CSV Log)</h4>
+          <h4 style="font-family:var(--font-serif); font-size:1.1rem;">Deposit & Withdrawal Ledger</h4>
           <label class="btn btn-secondary btn-sm file-upload-btn">
-            📥 Import New Pocket Option CSV
+            📥 Import Deposit CSV
             <input type="file" id="importPoCsvInput" accept=".csv" class="hidden">
           </label>
         </div>
@@ -224,6 +230,63 @@
             </thead>
             <tbody id="poLedgerTableBody">
               <!-- JS Populates CSV records -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Trade History Analytics (2,800+ Executions) -->
+      <div class="modal-body-content hidden" id="poTabTradeHistoryContent" style="max-height:70vh; overflow-y:auto;">
+        <div class="po-stats-summary-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+          <div class="po-stat-card">
+            <span class="po-stat-label">TOTAL TRADES</span>
+            <span class="po-stat-val" id="poTradeTotalCount">0</span>
+            <span class="po-stat-sub" id="poTradeWinsLosses">0W / 0L</span>
+          </div>
+
+          <div class="po-stat-card">
+            <span class="po-stat-card-label">WIN RATE %</span>
+            <span class="po-stat-val text-win" id="poTradeWinRate">0%</span>
+            <span class="po-stat-sub" id="poTradeCallPutRatio">CALL / PUT</span>
+          </div>
+
+          <div class="po-stat-card">
+            <span class="po-stat-label">TOTAL VOLUME</span>
+            <span class="po-stat-val text-accent" id="poTradeTotalVolume">$0.00</span>
+            <span class="po-stat-sub">Total Staked</span>
+          </div>
+
+          <div class="po-stat-card">
+            <span class="po-stat-label">NET PROFIT ($)</span>
+            <span class="po-stat-val" id="poTradeNetProfit">$0.00</span>
+            <span class="po-stat-sub">Total Return</span>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; margin-bottom:0.75rem;">
+          <h4 style="font-family:var(--font-serif); font-size:1.1rem;">Binary Executions Log</h4>
+          <label class="btn btn-secondary btn-sm file-upload-btn">
+            📥 Import Trade History CSV (export_history_*.csv)
+            <input type="file" id="importPoTradeHistoryInput" accept=".csv" class="hidden">
+          </label>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Close Time</th>
+                <th>Asset</th>
+                <th>Dir</th>
+                <th>Exp</th>
+                <th>Open Price</th>
+                <th>Close Price</th>
+                <th>Stake</th>
+                <th>Profit ($)</th>
+              </tr>
+            </thead>
+            <tbody id="poTradeHistoryTableBody">
+              <!-- JS Populates trade executions -->
             </tbody>
           </table>
         </div>

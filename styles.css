@@ -222,7 +222,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  width: 210px;
+  width: 200px;
   transition: all var(--transition-fast);
 }
 
@@ -230,7 +230,7 @@ body {
   outline: none;
   border-color: var(--accent-gold);
   background-color: var(--bg-elevated);
-  width: 250px;
+  width: 240px;
 }
 
 .search-shortcut {
@@ -670,9 +670,40 @@ body {
   gap: 0.3rem;
 }
 
-/* Pocket Option Modal & Ledger Styling */
+/* Pocket Option Hub Modal & Tabs */
 .po-modal {
-  max-width: 820px;
+  max-width: 860px;
+}
+
+.po-hub-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-main);
+  padding: 0 1.5rem;
+  gap: 1rem;
+}
+
+.po-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.85rem 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.po-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.po-tab-btn.active {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+  font-weight: 600;
 }
 
 .po-stats-summary-grid {
@@ -744,7 +775,6 @@ body {
   font-size: 0.7rem;
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-
 }
 .status-badge.completed { background-color: var(--color-win-bg); color: var(--color-win); }
 .status-badge.declined { background-color: var(--color-loss-bg); color: var(--color-loss); }
@@ -1187,7 +1217,7 @@ body {
     justify-content: space-between;
   }
   .po-stats-summary-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .search-box input {
     width: 140px;

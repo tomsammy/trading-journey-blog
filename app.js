@@ -1,6 +1,6 @@
 /**
  * THE TAPE — Trading Journal & Blog Application Logic
- * Integrated with Pocket Option Capital Cashflow Ledger & Passcode Protection.
+ * Integrated with Pocket Option Cashflow & Binary Executions Trade Analytics.
  */
 
 const DEFAULT_PO_DEPOSITS = [
@@ -56,13 +56,13 @@ Over the past week, I've proven consistency on lower stake sizes ($10–$40 trad
 
 With a solid cashflow baseline, increasing position sizing while maintaining a strict **1.5% max risk per binary trade** will accelerate account growth without risking emotional tilt.
 
-```
+\`\`\`
 Pocket Option Cashflow Balance Sheet:
 Total Deposited:  $735.00 (14 Transactions)
 Total Withdrawn: -$416.15 (4 Transactions)
 ------------------------------------------
 Net Equity In:    $318.85
-```
+\`\`\`
 
 ---
 
@@ -238,6 +238,7 @@ class TradingJournalApp {
   constructor() {
     this.posts = [];
     this.poDeposits = [];
+    this.poTradeHistory = [];
     this.currentPost = null;
     this.isAdminAuthenticated = false;
     this.pendingAdminAction = null;
@@ -256,6 +257,7 @@ class TradingJournalApp {
   init() {
     this.loadPosts();
     this.loadPoDeposits();
+    this.loadPoTradeHistory();
     this.loadPasscode();
     this.bindEvents();
     this.renderStats();
@@ -319,7 +321,23 @@ class TradingJournalApp {
     this.renderPoStats();
   }
 
-  // Pocket Option Stats Calculation
+  loadPoTradeHistory() {
+    const stored = localStorage.getItem('tape_po_trade_history');
+    if (stored) {
+      try {
+        this.poTradeHistory = JSON.parse(stored);
+      } catch (e) {
+        this.poTradeHistory = [];
+      }
+    }
+  }
+
+  savePoTradeHistory() {
+    localStorage.setItem('tape_po_trade_history', JSON.stringify(this.poTradeHistory));
+    this.renderPoTradeHistoryStats();
+  }
+
+  // Render Pocket Option Cashflow & Trade Stats
   renderPoStats() {
     let totalDeposited = 0;
     let depositCount = 0;
@@ -339,7 +357,6 @@ class TradingJournalApp {
 
     const netFunded = totalDeposited - totalWithdrawn;
 
-    // Render Hero Stats
     const pocketHeroStats = document.getElementById('pocketHeroStats');
     if (pocketHeroStats) {
       pocketHeroStats.innerHTML = `
@@ -349,7 +366,6 @@ class TradingJournalApp {
       `;
     }
 
-    // Render Modal Stats
     const elemDep = document.getElementById('poTotalDeposits');
     const elemDepCnt = document.getElementById('poDepositCount');
     const elemWith = document.getElementById('poTotalWithdrawals');
@@ -362,7 +378,6 @@ class TradingJournalApp {
     if (elemWithCnt) elemWithCnt.textContent = `${withdrawalCount} Completed`;
     if (elemNet) elemNet.textContent = `$${netFunded.toFixed(2)}`;
 
-    // Render Table
     const tableBody = document.getElementById('poLedgerTableBody');
     if (tableBody) {
       tableBody.innerHTML = this.poDeposits.map(item => {
@@ -381,9 +396,79 @@ class TradingJournalApp {
         `;
       }).join('');
     }
+
+    this.renderPoTradeHistoryStats();
   }
 
-  // Require Passcode Auth
+  // Render Pocket Option Binary Executions CSV Stats
+  renderPoTradeHistoryStats() {
+    const totalTrades = this.poTradeHistory.length;
+    let wins = 0;
+    let losses = 0;
+    let calls = 0;
+    let puts = 0;
+    let totalVolume = 0;
+    let netProfit = 0;
+
+    this.poTradeHistory.forEach(t => {
+      const stake = parseFloat(t.amount || 0) || 0;
+      const profit = parseFloat(t.profit || 0) || 0;
+      totalVolume += stake;
+      netProfit += profit;
+
+      if (profit > 0) wins++;
+      else if (profit < 0) losses++;
+
+      if ((t.direction || '').toLowerCase() === 'call') calls++;
+      else if ((t.direction || '').toLowerCase() === 'put') puts++;
+    });
+
+    const winRate = (wins + losses) > 0 ? Math.round((wins / (wins + losses)) * 100) : 0;
+
+    const elemTotalCount = document.getElementById('poTradeTotalCount');
+    const elemWinsLosses = document.getElementById('poTradeWinsLosses');
+    const elemWinRate = document.getElementById('poTradeWinRate');
+    const elemCallPutRatio = document.getElementById('poTradeCallPutRatio');
+    const elemTotalVolume = document.getElementById('poTradeTotalVolume');
+    const elemNetProfit = document.getElementById('poTradeNetProfit');
+
+    if (elemTotalCount) elemTotalCount.textContent = totalTrades.toLocaleString();
+    if (elemWinsLosses) elemWinsLosses.textContent = `${wins}W / ${losses}L`;
+    if (elemWinRate) elemWinRate.textContent = `${winRate}%`;
+    if (elemCallPutRatio) elemCallPutRatio.textContent = `${calls} Calls / ${puts} Puts`;
+    if (elemTotalVolume) elemTotalVolume.textContent = `$${totalVolume.toFixed(2)}`;
+    if (elemNetProfit) {
+      elemNetProfit.textContent = `${netProfit >= 0 ? '+' : ''}$${netProfit.toFixed(2)}`;
+      elemNetProfit.style.color = netProfit >= 0 ? 'var(--color-win)' : 'var(--color-loss)';
+    }
+
+    // Render Table (top 100 recent)
+    const tableBody = document.getElementById('poTradeHistoryTableBody');
+    if (tableBody) {
+      if (totalTrades === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">No trade executions imported yet. Import export_history_*.csv file.</td></tr>`;
+      } else {
+        tableBody.innerHTML = this.poTradeHistory.slice(0, 100).map(t => {
+          const isWin = parseFloat(t.profit) > 0;
+          const isLoss = parseFloat(t.profit) < 0;
+
+          return `
+            <tr>
+              <td style="color:var(--text-primary);">${t.closeTime || t.openTime}</td>
+              <td style="font-weight:600; color:var(--accent-gold);">${t.asset}</td>
+              <td><span style="color:${t.direction === 'call' ? 'var(--color-win)' : 'var(--color-loss)'}">${(t.direction || '').toUpperCase()}</span></td>
+              <td style="color:var(--text-muted);">${t.expiration}</td>
+              <td>${t.openPrice}</td>
+              <td>${t.closePrice}</td>
+              <td>$${t.amount}</td>
+              <td style="font-weight:600; color:${isWin ? 'var(--color-win)' : isLoss ? 'var(--color-loss)' : 'var(--text-muted)'}">${t.profit >= 0 ? '+' : ''}$${t.profit}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+  }
+
   requireAdminAuth(onSuccessCallback) {
     if (this.isAdminAuthenticated) {
       onSuccessCallback();
@@ -436,14 +521,13 @@ class TradingJournalApp {
     } else {
       lockBadge.innerHTML = '🔒 Locked';
       lockBadge.style.color = 'var(--text-muted)';
-      securityBadge.innerHTML = 'LIVE SYNCED';
+      securityBadge.innerHTML = 'SYNCED';
       securityBadge.style.color = 'var(--accent-gold)';
       document.body.classList.remove('admin-unlocked');
     }
   }
 
   bindEvents() {
-    // Search input
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', (e) => {
       this.filters.search = e.target.value.toLowerCase().trim();
@@ -460,7 +544,7 @@ class TradingJournalApp {
       }
     });
 
-    // Pocket Option Ledger Modal Launch
+    // Pocket Option Hub Modal Launch & Tab Toggle
     document.getElementById('btnPocketOptionLedger').addEventListener('click', () => {
       document.getElementById('pocketLedgerModalOverlay').classList.remove('hidden');
     });
@@ -468,7 +552,26 @@ class TradingJournalApp {
       document.getElementById('pocketLedgerModalOverlay').classList.add('hidden');
     });
 
-    // CSV Import for Pocket Option
+    const btnTabCashflow = document.getElementById('btnTabCashflow');
+    const btnTabTradeHistory = document.getElementById('btnTabTradeHistory');
+    const poTabCashflowContent = document.getElementById('poTabCashflowContent');
+    const poTabTradeHistoryContent = document.getElementById('poTabTradeHistoryContent');
+
+    btnTabCashflow.addEventListener('click', () => {
+      btnTabCashflow.classList.add('active');
+      btnTabTradeHistory.classList.remove('active');
+      poTabCashflowContent.classList.remove('hidden');
+      poTabTradeHistoryContent.classList.add('hidden');
+    });
+
+    btnTabTradeHistory.addEventListener('click', () => {
+      btnTabTradeHistory.classList.add('active');
+      btnTabCashflow.classList.remove('active');
+      poTabTradeHistoryContent.classList.remove('hidden');
+      poTabCashflowContent.classList.add('hidden');
+    });
+
+    // CSV Importer 1: Deposit/Withdrawal CSV
     document.getElementById('importPoCsvInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -498,7 +601,47 @@ class TradingJournalApp {
         if (parsed.length > 0) {
           this.poDeposits = parsed;
           this.savePoDeposits();
-          alert(`Successfully imported ${parsed.length} Pocket Option deposit/withdrawal transactions!`);
+          alert(`Successfully imported ${parsed.length} Pocket Option cashflow records!`);
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // CSV Importer 2: Trade History Executions CSV (export_history_*.csv)
+    document.getElementById('importPoTradeHistoryInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        const lines = text.split(/\r?\n/).filter(Boolean);
+        if (lines.length <= 1) return;
+
+        const parsed = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',');
+          if (cols.length >= 10) {
+            parsed.push({
+              direction: cols[0].trim(),
+              order: cols[1].trim(),
+              expiration: cols[2].trim(),
+              asset: cols[3].trim(),
+              openTime: cols[4].trim(),
+              closeTime: cols[5].trim(),
+              openPrice: cols[6].trim(),
+              closePrice: cols[7].trim(),
+              amount: cols[8].trim(),
+              profit: cols[9].trim(),
+              currency: cols[10] ? cols[10].trim() : 'USD'
+            });
+          }
+        }
+
+        if (parsed.length > 0) {
+          this.poTradeHistory = parsed;
+          this.savePoTradeHistory();
+          alert(`Successfully imported ${parsed.length.toLocaleString()} Pocket Option trade executions!`);
         }
       };
       reader.readAsText(file);
@@ -701,8 +844,10 @@ class TradingJournalApp {
       if (confirm('Are you sure you want to reset to demo seed posts? Custom local entries will be overwritten.')) {
         this.posts = DEFAULT_POSTS;
         this.poDeposits = DEFAULT_PO_DEPOSITS;
+        this.poTradeHistory = [];
         this.savePosts();
         this.savePoDeposits();
+        this.savePoTradeHistory();
         this.renderFeed();
         document.getElementById('settingsModalOverlay').classList.add('hidden');
       }
