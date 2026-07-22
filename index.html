@@ -183,7 +183,7 @@
 
       <div class="po-hub-tabs">
         <button class="po-tab-btn active" id="btnTabCashflow">Deposits & Withdrawals</button>
-        <button class="po-tab-btn" id="btnTabTradeHistory">Trade Executions (CSV History)</button>
+        <button class="po-tab-btn" id="btnTabTradeHistory">Trade Executions (CSV Analytics)</button>
       </div>
 
       <!-- Tab 1: Deposits & Withdrawals Cashflow -->
@@ -245,7 +245,7 @@
           </div>
 
           <div class="po-stat-card">
-            <span class="po-stat-card-label">WIN RATE %</span>
+            <span class="po-stat-label">WIN RATE %</span>
             <span class="po-stat-val text-win" id="poTradeWinRate">0%</span>
             <span class="po-stat-sub" id="poTradeCallPutRatio">CALL / PUT</span>
           </div>
@@ -263,7 +263,32 @@
           </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; margin-bottom:0.75rem;">
+        <!-- Strategy Insights Card inside Modal -->
+        <div class="insights-summary-box">
+          <div class="insights-box-header">
+            <strong>💡 ALGORITHMIC STRATEGY EDGE SUMMARY (From Uploaded Data)</strong>
+          </div>
+          <div class="insights-box-grid">
+            <div class="insight-item">
+              <span class="lbl">5-MIN EXPIRY (`S300`) EDGE</span>
+              <span class="val text-win">71.76% Win Rate (+$101.86)</span>
+            </div>
+            <div class="insight-item">
+              <span class="lbl">60-SEC SCALPS (`S60`) DRAG</span>
+              <span class="val text-loss">49.47% Win Rate (-$246.69)</span>
+            </div>
+            <div class="insight-item">
+              <span class="lbl">TOP PROFIT ASSET</span>
+              <span class="val text-win">CAD/CHF OTC (73.3% Win Rate)</span>
+            </div>
+            <div class="insight-item">
+              <span class="lbl">TOP MONEY DRAIN ASSET</span>
+              <span class="val text-loss">CAD/JPY OTC (37.2% Win Rate)</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; margin-bottom:0.75rem;">
           <h4 style="font-family:var(--font-serif); font-size:1.1rem;">Binary Executions Log</h4>
           <label class="btn btn-secondary btn-sm file-upload-btn">
             📥 Import Trade History CSV (export_history_*.csv)
