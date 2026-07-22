@@ -1,5 +1,16 @@
 [
   {
+    "id": "2026-07-22-pocket-option-critical-analysis",
+    "filename": "2026-07-22-pocket-option-critical-analysis.md",
+    "title": "Critical Deep Dive: Quantitative Analysis of 2,836 Pocket Option Executions",
+    "date": "2026-07-22",
+    "category": "Post-Mortem",
+    "tickers": ["$POCKETOPTION", "$AUDCHF", "$CADCHF", "$CADJPY", "$EURUSD"],
+    "outcome": "Loss",
+    "readTime": "8 min",
+    "excerpt": "A comprehensive data analysis of 2,836 binary trades uncovering hidden statistical edges, money-draining assets, and the 5-minute expiry breakthrough."
+  },
+  {
     "id": "2026-07-22-discipline-and-pnl",
     "filename": "2026-07-22-discipline-and-pnl.md",
     "title": "Daily Recap: Clean Execution on $BTC Breakout & PnL Disconnect",

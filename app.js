@@ -28,6 +28,100 @@ const DEFAULT_PO_DEPOSITS = [
 
 const DEFAULT_POSTS = [
   {
+    id: "2026-07-22-pocket-option-critical-analysis",
+    title: "Critical Deep Dive: Quantitative Analysis of 2,836 Pocket Option Executions",
+    date: "2026-07-22",
+    category: "Post-Mortem",
+    tickers: ["$POCKETOPTION", "$AUDCHF", "$CADCHF", "$CADJPY", "$EURUSD"],
+    outcome: "Loss",
+    readTime: "8 min",
+    excerpt: "A comprehensive data analysis of 2,836 binary trades uncovering hidden statistical edges, money-draining assets, and the 5-minute expiry breakthrough.",
+    content: `# Critical Deep Dive: Quantitative Analysis of 2,836 Pocket Option Executions
+
+> **Analysis Scope:** 2,836 real trade executions extracted directly from Pocket Option export history logs.
+
+---
+
+### Executive Performance Summary
+
+* **Total Executions Analyzed:** 2,836 trades
+* **Wins:** 1,399 | **Losses:** 1,421 | **Refunds/Ties:** 16
+* **Overall Win Rate:** **49.61%**
+* **Total Volume Staked:** **$5,354.62**
+* **Net Realized PnL:** **-$334.88**
+
+While a 49.61% win rate is slightly below the ~54% needed to overcome binary options payout odds (80-92%), **deeper statistical segmentation reveals a profitable core trading strategy hidden under execution noise.**
+
+---
+
+### 1. The Expiration Breakthrough: 60-Sec Noise vs. 5-Min Edge
+
+The data reveals a stark contrast between short-duration 60-second noise and longer-duration market structure setups:
+
+| Expiration | Trade Count | Win Rate % | Net PnL ($) | Strategy Impact |
+|---|---|---|---|---|
+| **S60 (60 Seconds)** | **1,902** (67.1%) | **49.47%** | -$246.69 | Heavy Noise & Payout Drag |
+| **S180 (3 Minutes)** | 337 | 38.87% | -$141.46 | Poor Timing Window |
+| **S120 (2 Minutes)** | 316 | 45.57% | -$84.14 | Sub-Optimal Retests |
+| **S300 (5 Minutes)** | **170** | **71.76%** | **+$101.86** | 🔥 **High-Confluence Edge** |
+| **S240 (4 Minutes)** | 28 | **85.71%** | **+$31.56** | 🔥 **High-Confluence Edge** |
+| **S480 (8 Minutes)** | 12 | **100.00%** | **+$26.08** | Perfect Structural Follow-through |
+
+#### 💡 Critical Finding:
+When trading **60-second hyper-scalps**, market micro-whipsaws cause your win rate to hover at **49.47%**, creating a net drawdown. 
+However, when you extend your expiration to **5 minutes (S300)**, your win rate surges to **71.76%** with **+$101.86 profit**!
+
+---
+
+### 2. Asset Profitability: The Winners vs. Money Drains
+
+Your trade history spans 20+ pairs. The performance split between pairs is staggering:
+
+#### 🏆 Top Goldmine Assets (Keep Trading These):
+1. **CAD/CHF OTC**: 236 trades | **73.31% Win Rate** | **+$171.92 Profit**
+2. **AUD/CHF OTC**: 139 trades | **76.26% Win Rate** | **+$115.70 Profit**
+3. **AED/CNY OTC**: 185 trades | **59.46% Win Rate** | **+$57.56 Profit**
+4. **EUR/GBP OTC**: 132 trades | **54.55% Win Rate** | **+$13.48 Profit**
+
+#### ⚠️ Top Money-Draining Assets (Blacklist or Eliminate):
+1. **CAD/JPY OTC**: 497 trades | **37.22% Win Rate** | -$275.07 Loss
+2. **EUR/USD OTC**: 300 trades | **36.00% Win Rate** | -$195.36 Loss
+3. **AUD/NZD OTC**: 349 trades | **43.55% Win Rate** | -$141.85 Loss
+4. **AUD/CAD OTC**: 370 trades | **47.03% Win Rate** | -$56.75 Loss
+
+> **Action Item:** Eliminating \`CAD/JPY OTC\` and \`EUR/USD OTC\` alone instantly erases **-$470.43 of losses**, turning your entire account net positive!
+
+---
+
+### 3. Directional Bias: Bearish Edge (PUT) vs Bullish (CALL)
+
+* **PUT (Short) Executions:** 1,837 trades | **51.71% Win Rate** | -$90.56 Net
+* **CALL (Long) Executions:** 983 trades | **45.68% Win Rate** | -$244.32 Net
+
+You exhibit significantly higher accuracy when trading **PUTs** (following downtrends or resistance rejections) than when attempting counter-trend CALL reversals.
+
+---
+
+### 4. Behavior & Execution Hygiene: Rapid Button-Smashing
+
+The timestamp analysis identified frequent instances of **rapid-fire multi-click sequences**:
+* Example (2026-07-22 19:33:00 to 19:33:10): **12 CALL trades placed in under 10 seconds** on EUR/USD OTC.
+* When price moves against a position, placing 5 to 10 identical orders within seconds turns a single $2 loss into a **$24 loss sequence**.
+
+---
+
+### 🛠️ Strategic Action Plan & Optimization Rules
+
+To immediately turn this dataset into a consistent profit curve:
+
+1. **Mandatory 5-Minute Expiration Rule (\`S300\`)**: Ban 60-second trades completely. Your 5-minute trades yield a **71.8% win rate**.
+2. **Asset Focus & Blacklist**:
+   - **Allowed Pairs:** \`AUD/CHF OTC\`, \`CAD/CHF OTC\`, \`AED/CNY OTC\`.
+   - **Blacklisted Pairs:** \`CAD/JPY OTC\`, \`EUR/USD OTC\`, \`AUD/NZD OTC\`.
+3. **Single Order Entry Lock**: Max 1 trade per setup level. No multi-clicking or rapid re-entries within 60 seconds.
+4. **Focus on PUT (Short) Setups**: Align entries with 5-minute bearish structure sweeps.`
+  },
+  {
     id: "2026-07-21-pocket-option-funding",
     title: "Pocket Option Capital Flow: Scaling with $500 Deposit & System Discipline",
     date: "2026-07-21",
@@ -337,7 +431,6 @@ class TradingJournalApp {
     this.renderPoTradeHistoryStats();
   }
 
-  // Render Pocket Option Cashflow & Trade Stats
   renderPoStats() {
     let totalDeposited = 0;
     let depositCount = 0;
@@ -400,7 +493,6 @@ class TradingJournalApp {
     this.renderPoTradeHistoryStats();
   }
 
-  // Render Pocket Option Binary Executions CSV Stats
   renderPoTradeHistoryStats() {
     const totalTrades = this.poTradeHistory.length;
     let wins = 0;
@@ -442,7 +534,6 @@ class TradingJournalApp {
       elemNetProfit.style.color = netProfit >= 0 ? 'var(--color-win)' : 'var(--color-loss)';
     }
 
-    // Render Table (top 100 recent)
     const tableBody = document.getElementById('poTradeHistoryTableBody');
     if (tableBody) {
       if (totalTrades === 0) {
@@ -544,7 +635,6 @@ class TradingJournalApp {
       }
     });
 
-    // Pocket Option Hub Modal Launch & Tab Toggle
     document.getElementById('btnPocketOptionLedger').addEventListener('click', () => {
       document.getElementById('pocketLedgerModalOverlay').classList.remove('hidden');
     });
@@ -571,7 +661,6 @@ class TradingJournalApp {
       poTabCashflowContent.classList.add('hidden');
     });
 
-    // CSV Importer 1: Deposit/Withdrawal CSV
     document.getElementById('importPoCsvInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -607,7 +696,6 @@ class TradingJournalApp {
       reader.readAsText(file);
     });
 
-    // CSV Importer 2: Trade History Executions CSV (export_history_*.csv)
     document.getElementById('importPoTradeHistoryInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -647,13 +735,11 @@ class TradingJournalApp {
       reader.readAsText(file);
     });
 
-    // Brand home click
     document.getElementById('brandHomeLink').addEventListener('click', (e) => {
       e.preventDefault();
       this.resetFilters();
     });
 
-    // Admin Auth Lock Toggle
     document.getElementById('btnAdminAuth').addEventListener('click', () => {
       if (this.isAdminAuthenticated) {
         this.isAdminAuthenticated = false;
@@ -663,7 +749,6 @@ class TradingJournalApp {
       }
     });
 
-    // Passcode Form Submit
     document.getElementById('passcodeForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const input = document.getElementById('passcodeInput').value;
@@ -674,7 +759,6 @@ class TradingJournalApp {
       this.closePasscodeModal();
     });
 
-    // Change Passcode
     document.getElementById('btnOpenChangePasscode').addEventListener('click', () => {
       this.requireAdminAuth(() => {
         document.getElementById('changePasscodeBox').classList.toggle('hidden');
@@ -693,7 +777,6 @@ class TradingJournalApp {
       document.getElementById('changePasscodeBox').classList.add('hidden');
     });
 
-    // Category Pills
     const pills = document.querySelectorAll('#categoryPills .pill');
     pills.forEach(pill => {
       pill.addEventListener('click', () => {
@@ -704,30 +787,25 @@ class TradingJournalApp {
       });
     });
 
-    // Outcome Filter
     document.getElementById('outcomeFilter').addEventListener('change', (e) => {
       this.filters.outcome = e.target.value;
       this.renderFeed();
     });
 
-    // Ticker Filter
     document.getElementById('tickerFilter').addEventListener('change', (e) => {
       this.filters.ticker = e.target.value;
       this.renderFeed();
     });
 
-    // Sort Order
     document.getElementById('sortOrder').addEventListener('change', (e) => {
       this.filters.sort = e.target.value;
       this.renderFeed();
     });
 
-    // Reset Filters Button
     document.getElementById('btnResetFilters').addEventListener('click', () => {
       this.resetFilters();
     });
 
-    // Reader controls
     document.getElementById('btnCloseReader').addEventListener('click', () => {
       this.closeReader();
     });
@@ -738,7 +816,6 @@ class TradingJournalApp {
       this.downloadCurrentMarkdown();
     });
 
-    // Protected Admin Reader Controls
     document.getElementById('btnEditEntry').addEventListener('click', () => {
       if (this.currentPost) {
         this.requireAdminAuth(() => {
@@ -761,7 +838,6 @@ class TradingJournalApp {
       }
     });
 
-    // Reader Scroll Progress
     const readerDrawer = document.getElementById('readerDrawer');
     readerDrawer.addEventListener('scroll', () => {
       const scrollTop = readerDrawer.scrollTop;
@@ -770,7 +846,6 @@ class TradingJournalApp {
       document.getElementById('readerProgressBar').style.width = `${Math.min(100, Math.max(0, progress))}%`;
     });
 
-    // Protected Editor Launch (+ New Entry)
     document.getElementById('btnOpenEditor').addEventListener('click', () => {
       this.requireAdminAuth(() => {
         this.openEditor();
@@ -784,7 +859,6 @@ class TradingJournalApp {
       this.closeEditor();
     });
 
-    // Editor Tab Toggle
     const btnEditTab = document.getElementById('btnEditTab');
     const btnPreviewTab = document.getElementById('btnPreviewTab');
     const postContent = document.getElementById('postContent');
@@ -805,20 +879,17 @@ class TradingJournalApp {
       editorPreview.innerHTML = this.renderMarkdown(postContent.value);
     });
 
-    // Editor Toolbar
     document.getElementById('editorToolbar').addEventListener('click', (e) => {
       const btn = e.target.closest('.tb-btn');
       if (!btn) return;
       this.insertSyntax(btn.dataset.syntax);
     });
 
-    // Save Post Form
     document.getElementById('editorForm').addEventListener('submit', (e) => {
       e.preventDefault();
       this.savePostForm();
     });
 
-    // Settings Modal
     document.getElementById('btnSettings').addEventListener('click', () => {
       this.requireAdminAuth(() => {
         document.getElementById('settingsModalOverlay').classList.remove('hidden');
@@ -829,17 +900,14 @@ class TradingJournalApp {
       document.getElementById('settingsModalOverlay').classList.add('hidden');
     });
 
-    // Export JSON
     document.getElementById('btnExportJSON').addEventListener('click', () => {
       this.exportJSON();
     });
 
-    // Import JSON
     document.getElementById('importJsonInput').addEventListener('change', (e) => {
       this.importJSON(e);
     });
 
-    // Reset Seed
     document.getElementById('btnResetSeed').addEventListener('click', () => {
       if (confirm('Are you sure you want to reset to demo seed posts? Custom local entries will be overwritten.')) {
         this.posts = DEFAULT_POSTS;
@@ -1219,6 +1287,17 @@ class TradingJournalApp {
       return `<pre><code>${p1.trim()}</code></pre>`;
     });
 
+    // Tables parsing
+    html = html.replace(/^\|(.+)\|$/gim, function(match) {
+      const cells = match.split('|').filter(c => c.trim() !== '');
+      if (cells.every(c => c.includes('---'))) return '';
+      const isHeader = match.includes('---');
+      const cellTag = isHeader ? 'th' : 'td';
+      const row = cells.map(c => `<${cellTag}>${c.trim()}</${cellTag}>`).join('');
+      return `<tr>${row}</tr>`;
+    });
+    html = html.replace(/(<tr>[\s\S]*?<\/tr>)+/g, '<div class="table-wrapper"><table class="ledger-table">$&</table></div>');
+
     html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
@@ -1243,7 +1322,7 @@ class TradingJournalApp {
     const blocks = html.split(/\n\n+/);
     return blocks.map(block => {
       const trimmed = block.trim();
-      if (trimmed.startsWith('<h') || trimmed.startsWith('<pre') || trimmed.startsWith('<blockquote') || trimmed.startsWith('<hr') || trimmed.startsWith('<li')) {
+      if (trimmed.startsWith('<h') || trimmed.startsWith('<pre') || trimmed.startsWith('<blockquote') || trimmed.startsWith('<hr') || trimmed.startsWith('<li') || trimmed.startsWith('<div class="table-wrapper"')) {
         return trimmed;
       }
       return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
