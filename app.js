@@ -1,8 +1,9 @@
 /**
  * THE TAPE — Trading Journal & Blog Application Logic
+ * Featuring Admin Passcode Protection & Pure Text Editorial Experience.
  */
 
-// Initial Seed Dataset (used if localStorage is empty)
+// Initial Seed Dataset
 const DEFAULT_POSTS = [
   {
     id: "2026-07-22-discipline-and-pnl",
@@ -167,11 +168,13 @@ Starting tomorrow, every execution will be logged here with entry reasons, chart
   }
 ];
 
-// App State Management
 class TradingJournalApp {
   constructor() {
     this.posts = [];
     this.currentPost = null;
+    this.isAdminAuthenticated = false;
+    this.pendingAdminAction = null; // Callback after successful passcode auth
+
     this.filters = {
       category: 'all',
       outcome: 'all',
@@ -185,10 +188,26 @@ class TradingJournalApp {
 
   init() {
     this.loadPosts();
+    this.loadPasscode();
     this.bindEvents();
     this.renderStats();
     this.populateTickerDropdown();
     this.renderFeed();
+    this.updateAdminStatusUI();
+  }
+
+  loadPasscode() {
+    if (!localStorage.getItem('tape_admin_passcode')) {
+      localStorage.setItem('tape_admin_passcode', 'trader123'); // Default passcode
+    }
+  }
+
+  getPasscode() {
+    return localStorage.getItem('tape_admin_passcode') || 'trader123';
+  }
+
+  setPasscode(newCode) {
+    localStorage.setItem('tape_admin_passcode', newCode);
   }
 
   loadPosts() {
@@ -212,6 +231,65 @@ class TradingJournalApp {
     this.populateTickerDropdown();
   }
 
+  // Require Security Authentication before executing action
+  requireAdminAuth(onSuccessCallback) {
+    if (this.isAdminAuthenticated) {
+      onSuccessCallback();
+    } else {
+      this.pendingAdminAction = onSuccessCallback;
+      this.openPasscodeModal();
+    }
+  }
+
+  openPasscodeModal() {
+    document.getElementById('passcodeModalOverlay').classList.remove('hidden');
+    document.getElementById('passcodeInput').value = '';
+    document.getElementById('passcodeError').classList.add('hidden');
+    document.getElementById('passcodeInput').focus();
+  }
+
+  closePasscodeModal() {
+    document.getElementById('passcodeModalOverlay').classList.add('hidden');
+    document.getElementById('changePasscodeBox').classList.add('hidden');
+    this.pendingAdminAction = null;
+  }
+
+  verifyPasscode(inputCode) {
+    if (inputCode === this.getPasscode()) {
+      this.isAdminAuthenticated = true;
+      this.updateAdminStatusUI();
+      this.closePasscodeModal();
+      if (this.pendingAdminAction) {
+        const action = this.pendingAdminAction;
+        this.pendingAdminAction = null;
+        action();
+      }
+      return true;
+    } else {
+      document.getElementById('passcodeError').classList.remove('hidden');
+      return false;
+    }
+  }
+
+  updateAdminStatusUI() {
+    const lockBadge = document.getElementById('adminLockBadge');
+    const securityBadge = document.getElementById('securityBadge');
+    
+    if (this.isAdminAuthenticated) {
+      lockBadge.innerHTML = '🔓 Unlocked';
+      lockBadge.style.color = 'var(--color-win)';
+      securityBadge.innerHTML = 'AUTHOR MODE';
+      securityBadge.style.color = 'var(--color-win)';
+      document.body.classList.add('admin-unlocked');
+    } else {
+      lockBadge.innerHTML = '🔒 Locked';
+      lockBadge.style.color = 'var(--text-muted)';
+      securityBadge.innerHTML = 'SECURE JOURNAL';
+      securityBadge.style.color = 'var(--accent-gold)';
+      document.body.classList.remove('admin-unlocked');
+    }
+  }
+
   bindEvents() {
     // Search input
     const searchInput = document.getElementById('searchInput');
@@ -220,7 +298,7 @@ class TradingJournalApp {
       this.renderFeed();
     });
 
-    // Search shortcut ⌘K or Ctrl+K
+    // Keyboard shortcut ⌘K / Ctrl+K
     window.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -231,10 +309,50 @@ class TradingJournalApp {
       }
     });
 
-    // Brand click home reset
+    // Brand home click
     document.getElementById('brandHomeLink').addEventListener('click', (e) => {
       e.preventDefault();
       this.resetFilters();
+    });
+
+    // Admin Security Lock Toggle Button
+    document.getElementById('btnAdminAuth').addEventListener('click', () => {
+      if (this.isAdminAuthenticated) {
+        this.isAdminAuthenticated = false;
+        this.updateAdminStatusUI();
+      } else {
+        this.requireAdminAuth(() => {});
+      }
+    });
+
+    // Passcode Form Submit
+    document.getElementById('passcodeForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('passcodeInput').value;
+      this.verifyPasscode(input);
+    });
+
+    document.getElementById('btnClosePasscode').addEventListener('click', () => {
+      this.closePasscodeModal();
+    });
+
+    // Change Passcode
+    document.getElementById('btnOpenChangePasscode').addEventListener('click', () => {
+      this.requireAdminAuth(() => {
+        document.getElementById('changePasscodeBox').classList.toggle('hidden');
+      });
+    });
+
+    document.getElementById('btnSaveNewPasscode').addEventListener('click', () => {
+      const newCode = document.getElementById('newPasscodeInput').value.trim();
+      if (newCode.length < 4) {
+        alert('Passcode must be at least 4 characters long.');
+        return;
+      }
+      this.setPasscode(newCode);
+      alert('Master passcode updated successfully!');
+      document.getElementById('newPasscodeInput').value = '';
+      document.getElementById('changePasscodeBox').classList.add('hidden');
     });
 
     // Category Pills
@@ -271,7 +389,7 @@ class TradingJournalApp {
       this.resetFilters();
     });
 
-    // Reader Modal controls
+    // Reader controls
     document.getElementById('btnCloseReader').addEventListener('click', () => {
       this.closeReader();
     });
@@ -281,10 +399,27 @@ class TradingJournalApp {
     document.getElementById('btnDownloadMd').addEventListener('click', () => {
       this.downloadCurrentMarkdown();
     });
+
+    // Protected Admin Reader Controls (Edit & Delete)
     document.getElementById('btnEditEntry').addEventListener('click', () => {
       if (this.currentPost) {
-        this.closeReader();
-        this.openEditor(this.currentPost);
+        this.requireAdminAuth(() => {
+          this.closeReader();
+          this.openEditor(this.currentPost);
+        });
+      }
+    });
+
+    document.getElementById('btnDeleteEntry').addEventListener('click', () => {
+      if (this.currentPost) {
+        this.requireAdminAuth(() => {
+          if (confirm(`Are you sure you want to delete "${this.currentPost.title}"?`)) {
+            this.posts = this.posts.filter(p => p.id !== this.currentPost.id);
+            this.savePosts();
+            this.closeReader();
+            this.renderFeed();
+          }
+        });
       }
     });
 
@@ -297,10 +432,13 @@ class TradingJournalApp {
       document.getElementById('readerProgressBar').style.width = `${Math.min(100, Math.max(0, progress))}%`;
     });
 
-    // Editor Modal controls
+    // Protected Editor Launch (+ New Entry)
     document.getElementById('btnOpenEditor').addEventListener('click', () => {
-      this.openEditor();
+      this.requireAdminAuth(() => {
+        this.openEditor();
+      });
     });
+
     document.getElementById('btnCloseEditor').addEventListener('click', () => {
       this.closeEditor();
     });
@@ -308,7 +446,7 @@ class TradingJournalApp {
       this.closeEditor();
     });
 
-    // Editor Tab Toggle (Edit vs Preview)
+    // Editor Tab Toggle
     const btnEditTab = document.getElementById('btnEditTab');
     const btnPreviewTab = document.getElementById('btnPreviewTab');
     const postContent = document.getElementById('postContent');
@@ -329,24 +467,26 @@ class TradingJournalApp {
       editorPreview.innerHTML = this.renderMarkdown(postContent.value);
     });
 
-    // Editor Toolbar Buttons
-    const toolbar = document.getElementById('editorToolbar');
-    toolbar.addEventListener('click', (e) => {
+    // Editor Toolbar
+    document.getElementById('editorToolbar').addEventListener('click', (e) => {
       const btn = e.target.closest('.tb-btn');
       if (!btn) return;
       this.insertSyntax(btn.dataset.syntax);
     });
 
-    // Save Form Submission
+    // Save Post Form
     document.getElementById('editorForm').addEventListener('submit', (e) => {
       e.preventDefault();
       this.savePostForm();
     });
 
-    // Settings / Backup Modal
+    // Protected Settings / Backup Modal
     document.getElementById('btnSettings').addEventListener('click', () => {
-      document.getElementById('settingsModalOverlay').classList.remove('hidden');
+      this.requireAdminAuth(() => {
+        document.getElementById('settingsModalOverlay').classList.remove('hidden');
+      });
     });
+
     document.getElementById('btnCloseSettings').addEventListener('click', () => {
       document.getElementById('settingsModalOverlay').classList.add('hidden');
     });
@@ -357,8 +497,7 @@ class TradingJournalApp {
     });
 
     // Import JSON
-    const importInput = document.getElementById('importJsonInput');
-    importInput.addEventListener('change', (e) => {
+    document.getElementById('importJsonInput').addEventListener('change', (e) => {
       this.importJSON(e);
     });
 
@@ -429,30 +568,18 @@ class TradingJournalApp {
 
   getFilteredPosts() {
     return this.posts.filter(post => {
-      // Category Filter
-      if (this.filters.category !== 'all' && post.category !== this.filters.category) {
-        return false;
-      }
-      // Outcome Filter
-      if (this.filters.outcome !== 'all' && post.outcome !== this.filters.outcome) {
-        return false;
-      }
-      // Ticker Filter
+      if (this.filters.category !== 'all' && post.category !== this.filters.category) return false;
+      if (this.filters.outcome !== 'all' && post.outcome !== this.filters.outcome) return false;
       if (this.filters.ticker !== 'all') {
-        if (!post.tickers || !post.tickers.includes(this.filters.ticker)) {
-          return false;
-        }
+        if (!post.tickers || !post.tickers.includes(this.filters.ticker)) return false;
       }
-      // Search Query
       if (this.filters.search) {
         const query = this.filters.search;
         const inTitle = post.title.toLowerCase().includes(query);
         const inExcerpt = post.excerpt ? post.excerpt.toLowerCase().includes(query) : false;
         const inContent = post.content ? post.content.toLowerCase().includes(query) : false;
         const inTickers = post.tickers ? post.tickers.some(t => t.toLowerCase().includes(query)) : false;
-        if (!inTitle && !inExcerpt && !inContent && !inTickers) {
-          return false;
-        }
+        if (!inTitle && !inExcerpt && !inContent && !inTickers) return false;
       }
       return true;
     }).sort((a, b) => {
@@ -503,7 +630,7 @@ class TradingJournalApp {
               Read Journal Entry
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
+                <polyline points="12" 5 19 12 12 19"></polyline>
               </svg>
             </span>
           </div>
@@ -511,7 +638,6 @@ class TradingJournalApp {
       `;
     }).join('');
 
-    // Attach card click handlers
     document.querySelectorAll('.post-card').forEach(card => {
       card.addEventListener('click', () => {
         const id = card.dataset.id;
@@ -521,7 +647,6 @@ class TradingJournalApp {
     });
   }
 
-  // Open Article Reader
   openReader(post) {
     this.currentPost = post;
     const readerOverlay = document.getElementById('readerModalOverlay');
@@ -586,7 +711,6 @@ class TradingJournalApp {
     URL.revokeObjectURL(url);
   }
 
-  // Open Editor Modal (Create or Edit)
   openEditor(post = null) {
     const modal = document.getElementById('editorModalOverlay');
     const modalTitle = document.getElementById('editorModalTitle');
@@ -622,7 +746,6 @@ class TradingJournalApp {
       inputContent.value = '';
     }
 
-    // Reset tabs
     document.getElementById('btnEditTab').click();
     modal.classList.remove('hidden');
   }
@@ -655,7 +778,6 @@ class TradingJournalApp {
     const readTime = `${Math.max(1, Math.ceil(wordCount / 200))} min`;
 
     if (editingId) {
-      // Update existing post
       const index = this.posts.findIndex(p => p.id === editingId);
       if (index !== -1) {
         this.posts[index] = {
@@ -664,7 +786,6 @@ class TradingJournalApp {
         };
       }
     } else {
-      // Create new post
       const newId = `${date}-${title.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 30)}`;
       const newPost = {
         id: newId,
@@ -739,15 +860,15 @@ class TradingJournalApp {
   closeAllModals() {
     this.closeReader();
     this.closeEditor();
+    this.closePasscodeModal();
     document.getElementById('settingsModalOverlay').classList.add('hidden');
   }
 
-  // Lightweight Markdown Renderer for pure text posts
+  // Lightweight Markdown Renderer
   renderMarkdown(md) {
     if (!md) return '';
 
     let html = md
-      // Escaping HTML characters
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
@@ -768,25 +889,25 @@ class TradingJournalApp {
     // Blockquotes
     html = html.replace(/^&gt;\s?(.*$)/gim, '<blockquote>$1</blockquote>');
 
-    // Checklists - [ ] and - [x]
+    // Checklists
     html = html.replace(/^- \[ \] (.*$)/gim, '<li style="list-style:none;">🏽 $1</li>');
     html = html.replace(/^- \[x\] (.*$)/gim, '<li style="list-style:none;">✅ $1</li>');
 
-    // Bold and Italic
+    // Bold & Italic
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
     // Inline Code
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Dollar Tickers e.g. $EURUSD, $BTC
+    // Dollar Tickers
     html = html.replace(/(\$[A-Z0-9]+)/g, '<span class="ticker-tag">$1</span>');
 
-    // Unordered lists
+    // Lists
     html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
     html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
 
-    // Paragraph wrapping (split by double line breaks)
+    // Paragraph wrapping
     const blocks = html.split(/\n\n+/);
     return blocks.map(block => {
       const trimmed = block.trim();
@@ -798,7 +919,6 @@ class TradingJournalApp {
   }
 }
 
-// Initialize Application on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new TradingJournalApp();
 });

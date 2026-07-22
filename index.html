@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Tape — Trading Journal & Blog</title>
-  <meta name="description" content="A minimalist, pure-text trading journey blog and daily execution journal documenting strategy, risk management, and post-mortems.">
+  <title>The Tape — Pure Text Trading Journal</title>
+  <meta name="description" content="A minimalist, passcode-protected pure-text trading journey blog documenting daily execution, risk management, and market post-mortems.">
   
   <!-- Google Fonts: Newsreader (Serif Header/Body), Inter (UI), JetBrains Mono (Tickers & Code) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
     <div class="container top-bar-content">
       <div class="journal-tagline">
         <span class="live-pulse"></span>
-        <span class="tagline-text">JOURNAL LOG &bull; PURE TEXT TRADING DIARY</span>
+        <span class="tagline-text">THE TAPE &bull; TRADING JOURNAL LOG</span>
       </div>
       <div class="top-stats" id="topStatsBar">
         <!-- JS fills stats -->
@@ -34,7 +34,7 @@
       <div class="brand">
         <a href="#" class="brand-link" id="brandHomeLink">
           <h1 class="brand-title">THE TAPE<span>.</span></h1>
-          <p class="brand-subtitle">Trading Journey & Execution Journal</p>
+          <p class="brand-subtitle">Trading Journey & Execution Log</p>
         </a>
       </div>
 
@@ -49,6 +49,11 @@
           <kbd class="search-shortcut">⌘K</kbd>
         </div>
 
+        <!-- Admin Lock Indicator & Toggle -->
+        <button class="btn btn-secondary btn-admin-status" id="btnAdminAuth" title="Admin Auth Lock">
+          <span id="adminLockBadge">🔒 Locked</span>
+        </button>
+
         <button class="btn btn-primary" id="btnOpenEditor">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -57,15 +62,13 @@
           New Entry
         </button>
 
-        <div class="dropdown">
-          <button class="btn btn-secondary icon-btn" id="btnSettings" title="Backup & Export">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-          </button>
-        </div>
+        <button class="btn btn-secondary icon-btn" id="btnSettings" title="Backup & Data Management">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -76,14 +79,14 @@
       <div class="hero-text">
         <h2 class="hero-headline">Documenting market mechanics, execution discipline, and post-mortems in pure text.</h2>
         <p class="hero-bio">
-          A personal, noise-free trading log. Tracking trade setups, emotional discipline, risk parameters, and PnL disconnects without financial fluff.
+          A clean, noise-free personal trading journal. Tracking trade setups, emotional discipline, risk parameters, and PnL disconnects without fluff.
         </p>
       </div>
 
       <div class="discipline-card">
         <div class="card-header-mini">
           <span class="mini-label">TRADER DISCIPLINE MANTRA</span>
-          <span class="mini-badge">SYSTEM ACTIVE</span>
+          <span class="mini-badge" id="securityBadge">SECURE JOURNAL</span>
         </div>
         <blockquote class="mantra-quote">
           "Focus on flawless process execution. The profit curve is simply a trailing byproduct of discipline."
@@ -132,7 +135,7 @@
   <main class="main-content">
     <div class="container">
       <div class="feed-header">
-        <span class="results-count" id="resultsCount">Showing 3 entries</span>
+        <span class="results-count" id="resultsCount">Showing entries</span>
         <div class="sort-wrapper">
           <label for="sortOrder">Sort:</label>
           <select id="sortOrder" class="select-input-sm">
@@ -161,7 +164,42 @@
     </div>
   </main>
 
-  <!-- Article Reader Drawer / Modal -->
+  <!-- Passcode Security Modal -->
+  <div class="modal-overlay hidden" id="passcodeModalOverlay">
+    <div class="modal-card sm-modal">
+      <div class="modal-header">
+        <h3 id="passcodeModalTitle">🔒 Admin Passcode Required</h3>
+        <button class="modal-close" id="btnClosePasscode">&times;</button>
+      </div>
+      <div class="modal-body-content">
+        <p class="text-muted" id="passcodeDesc">Enter your author passcode to create, edit, or manage journal entries.</p>
+        
+        <form id="passcodeForm" onsubmit="return false;">
+          <div class="form-group" style="margin-top:0.5rem;">
+            <label for="passcodeInput">Passcode</label>
+            <input type="password" id="passcodeInput" placeholder="Enter security passcode..." autocomplete="current-password" required>
+            <span class="passcode-error text-danger hidden" id="passcodeError">Incorrect passcode. Please try again.</span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem;">
+            <span class="text-muted" style="font-size:0.75rem;">Default passcode: <strong>trader123</strong></span>
+            <button type="submit" class="btn btn-primary" id="btnSubmitPasscode">Unlock Studio</button>
+          </div>
+        </form>
+
+        <div class="passcode-change-box hidden" id="changePasscodeBox">
+          <hr style="margin: 1.25rem 0; border-color: var(--border-subtle);">
+          <div class="form-group">
+            <label for="newPasscodeInput">Set New Master Passcode</label>
+            <input type="password" id="newPasscodeInput" placeholder="Enter new passcode...">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnSaveNewPasscode" style="margin-top:0.5rem;">Update Passcode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Reader Drawer Modal -->
   <div class="modal-overlay hidden" id="readerModalOverlay">
     <div class="reader-drawer" id="readerDrawer">
       <div class="reader-progress-container">
@@ -194,12 +232,15 @@
             </svg>
             .MD File
           </button>
-          <button class="btn btn-secondary btn-sm" id="btnEditEntry">
+          <button class="btn btn-secondary btn-sm admin-only-inline" id="btnEditEntry">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
             Edit
+          </button>
+          <button class="btn btn-danger-outline btn-sm admin-only-inline" id="btnDeleteEntry">
+            Delete
           </button>
         </div>
       </div>
@@ -294,15 +335,7 @@
             </div>
 
             <div class="editor-input-container">
-              <textarea id="postContent" placeholder="Write your daily post in Markdown here...
-
-### Trade Metrics
-* **Ticker:** $EURUSD
-* **Direction:** Long
-* **Risk/Reward:** 1:2.5
-
-### Entry Rationale & Execution Notes
-Write your thoughts, chart levels, and post-trade reflections..." required></textarea>
+              <textarea id="postContent" placeholder="Write your daily post in Markdown here..." required></textarea>
               <div id="editorPreview" class="prose-content hidden"></div>
             </div>
           </div>
@@ -347,6 +380,14 @@ Write your thoughts, chart levels, and post-trade reflections..." required></tex
           </label>
         </div>
 
+        <div class="settings-action-card">
+          <div class="settings-action-info">
+            <strong>Passcode Protection</strong>
+            <p>Change your admin security passcode.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnOpenChangePasscode">Change Passcode</button>
+        </div>
+
         <div class="settings-action-card border-danger">
           <div class="settings-action-info">
             <strong class="text-danger">Reset to Default Seed Posts</strong>
@@ -363,10 +404,7 @@ Write your thoughts, chart levels, and post-trade reflections..." required></tex
     <div class="container footer-container">
       <div class="footer-left">
         <span class="footer-logo">THE TAPE</span>
-        <span class="footer-copy">&copy; 2026 Trading Journey Blog. Built for pure text clarity. Vercel Ready.</span>
-      </div>
-      <div class="footer-right">
-        <a href="https://vercel.com" target="_blank" rel="noopener" class="footer-link">Deploy to Vercel</a>
+        <span class="footer-copy">&copy; 2026 Trading Journey Blog. Built for pure text clarity. Passcode Secured.</span>
       </div>
     </div>
   </footer>

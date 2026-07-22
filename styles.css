@@ -219,7 +219,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.85rem;
-  width: 240px;
+  width: 230px;
   transition: all var(--transition-fast);
 }
 
@@ -227,7 +227,7 @@ body {
   outline: none;
   border-color: var(--accent-gold);
   background-color: var(--bg-elevated);
-  width: 280px;
+  width: 270px;
 }
 
 .search-shortcut {
@@ -240,6 +240,13 @@ body {
   padding: 0.15rem 0.35rem;
   border-radius: 4px;
   pointer-events: none;
+}
+
+/* Admin Lock Button */
+.btn-admin-status {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
 }
 
 /* Buttons */
@@ -846,7 +853,7 @@ body {
   margin: 2.5rem 0;
 }
 
-/* Modals (Editor & Settings) */
+/* Modals (Passcode, Editor & Settings) */
 .modal-card {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-strong);
@@ -865,7 +872,7 @@ body {
 }
 
 .sm-modal {
-  max-width: 500px;
+  max-width: 480px;
 }
 
 .modal-header {
@@ -892,6 +899,12 @@ body {
 
 .modal-close:hover {
   color: var(--text-primary);
+}
+
+.passcode-error {
+  font-size: 0.78rem;
+  margin-top: 0.35rem;
+  display: block;
 }
 
 .editor-form-grid {
@@ -1086,12 +1099,6 @@ body {
   margin-right: 0.75rem;
 }
 
-.footer-link {
-  color: var(--accent-gold);
-  text-decoration: none;
-}
-.footer-link:hover { text-decoration: underline; }
-
 /* Responsive adjustments */
 @media (max-width: 820px) {
   .hero-container {
@@ -1107,9 +1114,9 @@ body {
     justify-content: space-between;
   }
   .search-box input {
-    width: 160px;
+    width: 150px;
   }
   .search-box input:focus {
-    width: 180px;
+    width: 170px;
   }
 }
