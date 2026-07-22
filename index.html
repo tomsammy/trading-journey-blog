@@ -34,7 +34,7 @@
       <div class="brand">
         <a href="#" class="brand-link" id="brandHomeLink">
           <h1 class="brand-title">THE TAPE<span>.</span></h1>
-          <p class="brand-subtitle">Trading Journey & Execution Log</p>
+          <p class="brand-subtitle">Pocket Option & Trading Journey Log</p>
         </a>
       </div>
 
@@ -48,6 +48,14 @@
           <input type="text" id="searchInput" placeholder="Search posts, $tickers, strategies..." autocomplete="off">
           <kbd class="search-shortcut">⌘K</kbd>
         </div>
+
+        <button class="btn btn-secondary btn-sm" id="btnPocketOptionLedger" title="Pocket Option Capital Flow">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Pocket Option Cashflow
+        </button>
 
         <!-- Admin Lock Indicator & Toggle -->
         <button class="btn btn-secondary btn-admin-status" id="btnAdminAuth" title="Admin Auth Lock">
@@ -79,18 +87,18 @@
       <div class="hero-text">
         <h2 class="hero-headline">Documenting market mechanics, execution discipline, and post-mortems in pure text.</h2>
         <p class="hero-bio">
-          A clean, noise-free personal trading journal. Tracking trade setups, emotional discipline, risk parameters, and PnL disconnects without fluff.
+          A clean, noise-free personal trading journal. Tracking Pocket Option binary executions, Forex & Crypto setups, emotional discipline, and risk parameters.
         </p>
       </div>
 
       <div class="discipline-card">
         <div class="card-header-mini">
-          <span class="mini-label">TRADER DISCIPLINE MANTRA</span>
-          <span class="mini-badge" id="securityBadge">SECURE JOURNAL</span>
+          <span class="mini-label">POCKET OPTION CAPITAL STATS</span>
+          <span class="mini-badge" id="securityBadge">LIVE SYNCED</span>
         </div>
-        <blockquote class="mantra-quote">
-          "Focus on flawless process execution. The profit curve is simply a trailing byproduct of discipline."
-        </blockquote>
+        <div class="pocket-hero-stats" id="pocketHeroStats">
+          <!-- JS fills Pocket Option quick metrics -->
+        </div>
       </div>
     </div>
   </section>
@@ -102,6 +110,7 @@
         <span class="filter-label">Category:</span>
         <div class="pills-wrapper" id="categoryPills">
           <button class="pill active" data-category="all">All Entries</button>
+          <button class="pill" data-category="Pocket Option Log">Pocket Option Log</button>
           <button class="pill" data-category="Daily Recap">Daily Recap</button>
           <button class="pill" data-category="Post-Mortem">Post-Mortem</button>
           <button class="pill" data-category="Strategy & Rules">Strategy & Rules</button>
@@ -164,6 +173,64 @@
     </div>
   </main>
 
+  <!-- Pocket Option Capital Ledger Modal -->
+  <div class="modal-overlay hidden" id="pocketLedgerModalOverlay">
+    <div class="modal-card po-modal">
+      <div class="modal-header">
+        <h3>💰 Pocket Option Deposits & Withdrawals Ledger</h3>
+        <button class="modal-close" id="btnClosePocketLedger">&times;</button>
+      </div>
+
+      <div class="modal-body-content" style="max-height:75vh; overflow-y:auto;">
+        <div class="po-stats-summary-grid">
+          <div class="po-stat-card">
+            <span class="po-stat-label">TOTAL DEPOSITED</span>
+            <span class="po-stat-val text-win" id="poTotalDeposits">$0.00</span>
+            <span class="po-stat-sub" id="poDepositCount">0 Completed</span>
+          </div>
+
+          <div class="po-stat-card">
+            <span class="po-stat-label">TOTAL WITHDRAWN</span>
+            <span class="po-stat-val text-loss" id="poTotalWithdrawals">$0.00</span>
+            <span class="po-stat-sub" id="poWithdrawalCount">0 Completed</span>
+          </div>
+
+          <div class="po-stat-card">
+            <span class="po-stat-label">NET FUNDED CAPITAL</span>
+            <span class="po-stat-val text-accent" id="poNetFunded">$0.00</span>
+            <span class="po-stat-sub">Bank Transfer (NGN)</span>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; margin-bottom:0.75rem;">
+          <h4 style="font-family:var(--font-serif); font-size:1.1rem;">Transaction History (CSV Log)</h4>
+          <label class="btn btn-secondary btn-sm file-upload-btn">
+            📥 Import New Pocket Option CSV
+            <input type="file" id="importPoCsvInput" accept=".csv" class="hidden">
+          </label>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Payment Method</th>
+                <th>Transaction ID</th>
+              </tr>
+            </thead>
+            <tbody id="poLedgerTableBody">
+              <!-- JS Populates CSV records -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Passcode Security Modal -->
   <div class="modal-overlay hidden" id="passcodeModalOverlay">
     <div class="modal-card sm-modal">
@@ -211,7 +278,7 @@
           <button class="btn-text" id="btnCloseReader">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
+              <polyline points="12" 19 5 12 12 5"></polyline>
             </svg>
             Back to Journal
           </button>
@@ -274,12 +341,13 @@
         <div class="editor-form-grid">
           <div class="form-group full-width">
             <label for="postTitle">Post Title *</label>
-            <input type="text" id="postTitle" placeholder="e.g. Daily Recap: Clean Execution on $BTC Breakout" required>
+            <input type="text" id="postTitle" placeholder="e.g. Daily Recap: Pocket Option Session & $BTC Analysis" required>
           </div>
 
           <div class="form-group">
             <label for="postCategory">Category *</label>
             <select id="postCategory" required>
+              <option value="Pocket Option Log">Pocket Option Log</option>
               <option value="Daily Recap">Daily Recap</option>
               <option value="Post-Mortem">Post-Mortem</option>
               <option value="Strategy & Rules">Strategy & Rules</option>
@@ -300,7 +368,7 @@
 
           <div class="form-group">
             <label for="postTickers">Tickers (comma separated)</label>
-            <input type="text" id="postTickers" placeholder="e.g. $EURUSD, $BTC, $SPX">
+            <input type="text" id="postTickers" placeholder="e.g. $POCKETOPTION, $EURUSD, $BTC">
           </div>
 
           <div class="form-group">
@@ -404,7 +472,7 @@
     <div class="container footer-container">
       <div class="footer-left">
         <span class="footer-logo">THE TAPE</span>
-        <span class="footer-copy">&copy; 2026 Trading Journey Blog. Built for pure text clarity. Passcode Secured.</span>
+        <span class="footer-copy">&copy; 2026 Trading Journey Blog. Built for Pocket Option & Pure Text Clarity.</span>
       </div>
     </div>
   </footer>

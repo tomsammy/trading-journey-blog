@@ -1,10 +1,76 @@
 /**
  * THE TAPE — Trading Journal & Blog Application Logic
- * Featuring Admin Passcode Protection & Pure Text Editorial Experience.
+ * Integrated with Pocket Option Capital Cashflow Ledger & Passcode Protection.
  */
 
-// Initial Seed Dataset
+const DEFAULT_PO_DEPOSITS = [
+  { id: "14706497", date: "2026-07-22 18:48:22", amount: "$101.48", method: "Bank Transfer (NGN)", type: "Withdrawal", status: "Completed", bonus: "$0" },
+  { id: "121227315", date: "2026-07-22 15:21:28", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "121115323", date: "2026-07-21 12:57:45", amount: "$500.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "121076287", date: "2026-07-21 01:44:10", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "121074930", date: "2026-07-21 01:09:53", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120943199", date: "2026-07-19 16:40:22", amount: "$15.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120941738", date: "2026-07-19 16:22:54", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120941064", date: "2026-07-19 16:15:28", amount: "$10.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "14663979", date: "2026-07-18 22:05:15", amount: "$83.28", method: "Bank Transfer (NGN)", type: "Withdrawal", status: "Completed", bonus: "$0" },
+  { id: "14663969", date: "2026-07-18 22:03:57", amount: "$83.28", method: "Bank Transfer (NGN)", type: "Withdrawal", status: "Declined by client", bonus: "$0" },
+  { id: "120875194", date: "2026-07-18 21:27:04", amount: "$40.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120875161", date: "2026-07-18 21:26:45", amount: "$10.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Expired", bonus: "$0" },
+  { id: "120873459", date: "2026-07-18 21:03:14", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "14658267", date: "2026-07-18 11:56:00", amount: "$131.00", method: "Bank Transfer (NGN)", type: "Withdrawal", status: "Completed", bonus: "$0" },
+  { id: "120813966", date: "2026-07-18 08:36:01", amount: "$40.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120813739", date: "2026-07-18 08:32:00", amount: "$20.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120812000", date: "2026-07-18 08:02:57", amount: "$10.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "14649681", date: "2026-07-17 16:47:02", amount: "$100.39", method: "Bank Transfer (NGN)", type: "Withdrawal", status: "Completed", bonus: "$0" },
+  { id: "120721145", date: "2026-07-17 10:27:38", amount: "$10.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" },
+  { id: "120720372", date: "2026-07-17 10:18:19", amount: "$10.00", method: "Bank Transfer (NGN)", type: "Deposit", status: "Completed", bonus: "$0" }
+];
+
 const DEFAULT_POSTS = [
+  {
+    id: "2026-07-21-pocket-option-funding",
+    title: "Pocket Option Capital Flow: Scaling with $500 Deposit & System Discipline",
+    date: "2026-07-21",
+    category: "Pocket Option Log",
+    tickers: ["$POCKETOPTION", "$EURUSD"],
+    outcome: "Win",
+    readTime: "4 min",
+    excerpt: "Logging a major capital milestone on Pocket Option with a $500 bank transfer deposit and analyzing my capital flow metrics.",
+    content: `# Pocket Option Capital Flow: Scaling with $500 Deposit & System Discipline
+
+### Capital Milestone Summary
+Today I executed a **$500.00 deposit** via NGN Bank Transfer into my Pocket Option account, bringing my cumulative funded capital to **$735.00** across 14 completed deposits.
+
+* **Account Platform:** Pocket Option
+* **Transaction ID:** \`#121115323\`
+* **Payment Method:** Bank Transfer (NGN)
+* **Net Funded Capital:** $318.85 ($735.00 Deposited - $416.15 Withdrawn)
+
+---
+
+### Why Scaling Capital Now?
+
+Over the past week, I've proven consistency on lower stake sizes ($10–$40 trades). After reviewing my Pocket Option cashflow ledger:
+- **Completed Withdrawals:** $416.15 (across 4 successful payout requests).
+- **Withdrawal Reliability:** Payouts processed cleanly back to bank account.
+
+With a solid cashflow baseline, increasing position sizing while maintaining a strict **1.5% max risk per binary trade** will accelerate account growth without risking emotional tilt.
+
+```
+Pocket Option Cashflow Balance Sheet:
+Total Deposited:  $735.00 (14 Transactions)
+Total Withdrawn: -$416.15 (4 Transactions)
+------------------------------------------
+Net Equity In:    $318.85
+```
+
+---
+
+### Execution Plan for Pocket Option Trades
+1. **Payout Safeguard:** Any session resulting in a +20% gain triggers an immediate $100 withdrawal request to lock in profits.
+2. **OTC & News Rules:** Avoid 1-minute OTC volatility spikes; stick to 5-minute expiry market structure retests.
+3. **Daily Loss Lockout:** 3 consecutive loss trades = immediate platform logoff.`
+  },
   {
     id: "2026-07-22-discipline-and-pnl",
     title: "Daily Recap: Clean Execution on $BTC Breakout & PnL Disconnect",
@@ -171,9 +237,10 @@ Starting tomorrow, every execution will be logged here with entry reasons, chart
 class TradingJournalApp {
   constructor() {
     this.posts = [];
+    this.poDeposits = [];
     this.currentPost = null;
     this.isAdminAuthenticated = false;
-    this.pendingAdminAction = null; // Callback after successful passcode auth
+    this.pendingAdminAction = null;
 
     this.filters = {
       category: 'all',
@@ -188,9 +255,11 @@ class TradingJournalApp {
 
   init() {
     this.loadPosts();
+    this.loadPoDeposits();
     this.loadPasscode();
     this.bindEvents();
     this.renderStats();
+    this.renderPoStats();
     this.populateTickerDropdown();
     this.renderFeed();
     this.updateAdminStatusUI();
@@ -198,7 +267,7 @@ class TradingJournalApp {
 
   loadPasscode() {
     if (!localStorage.getItem('tape_admin_passcode')) {
-      localStorage.setItem('tape_admin_passcode', 'trader123'); // Default passcode
+      localStorage.setItem('tape_admin_passcode', 'trader123');
     }
   }
 
@@ -231,7 +300,90 @@ class TradingJournalApp {
     this.populateTickerDropdown();
   }
 
-  // Require Security Authentication before executing action
+  loadPoDeposits() {
+    const stored = localStorage.getItem('tape_po_deposits');
+    if (stored) {
+      try {
+        this.poDeposits = JSON.parse(stored);
+      } catch (e) {
+        this.poDeposits = DEFAULT_PO_DEPOSITS;
+      }
+    } else {
+      this.poDeposits = DEFAULT_PO_DEPOSITS;
+      this.savePoDeposits();
+    }
+  }
+
+  savePoDeposits() {
+    localStorage.setItem('tape_po_deposits', JSON.stringify(this.poDeposits));
+    this.renderPoStats();
+  }
+
+  // Pocket Option Stats Calculation
+  renderPoStats() {
+    let totalDeposited = 0;
+    let depositCount = 0;
+    let totalWithdrawn = 0;
+    let withdrawalCount = 0;
+
+    this.poDeposits.forEach(item => {
+      const numVal = parseFloat((item.amount || '$0').replace(/[^0-9.]/g, '')) || 0;
+      if (item.type === 'Deposit' && item.status === 'Completed') {
+        totalDeposited += numVal;
+        depositCount++;
+      } else if (item.type === 'Withdrawal' && item.status === 'Completed') {
+        totalWithdrawn += numVal;
+        withdrawalCount++;
+      }
+    });
+
+    const netFunded = totalDeposited - totalWithdrawn;
+
+    // Render Hero Stats
+    const pocketHeroStats = document.getElementById('pocketHeroStats');
+    if (pocketHeroStats) {
+      pocketHeroStats.innerHTML = `
+        <div class="hero-stat-box"><span class="lbl">DEPOSITED</span><span class="val text-win">$${totalDeposited.toFixed(2)}</span></div>
+        <div class="hero-stat-box"><span class="lbl">WITHDRAWN</span><span class="val text-loss">$${totalWithdrawn.toFixed(2)}</span></div>
+        <div class="hero-stat-box"><span class="lbl">NET FUNDED</span><span class="val text-accent">$${netFunded.toFixed(2)}</span></div>
+      `;
+    }
+
+    // Render Modal Stats
+    const elemDep = document.getElementById('poTotalDeposits');
+    const elemDepCnt = document.getElementById('poDepositCount');
+    const elemWith = document.getElementById('poTotalWithdrawals');
+    const elemWithCnt = document.getElementById('poWithdrawalCount');
+    const elemNet = document.getElementById('poNetFunded');
+
+    if (elemDep) elemDep.textContent = `$${totalDeposited.toFixed(2)}`;
+    if (elemDepCnt) elemDepCnt.textContent = `${depositCount} Completed`;
+    if (elemWith) elemWith.textContent = `$${totalWithdrawn.toFixed(2)}`;
+    if (elemWithCnt) elemWithCnt.textContent = `${withdrawalCount} Completed`;
+    if (elemNet) elemNet.textContent = `$${netFunded.toFixed(2)}`;
+
+    // Render Table
+    const tableBody = document.getElementById('poLedgerTableBody');
+    if (tableBody) {
+      tableBody.innerHTML = this.poDeposits.map(item => {
+        const isDep = item.type === 'Deposit';
+        const statusClass = item.status ? item.status.toLowerCase().split(' ')[0] : 'completed';
+
+        return `
+          <tr>
+            <td style="color:var(--text-primary);">${item.date}</td>
+            <td><strong style="color:${isDep ? 'var(--color-win)' : 'var(--color-loss)'}">${item.type}</strong></td>
+            <td style="font-weight:600;">${item.amount}</td>
+            <td><span class="status-badge ${statusClass}">${item.status}</span></td>
+            <td style="color:var(--text-muted);">${item.method || 'Bank Transfer'}</td>
+            <td style="color:var(--text-muted); font-size:0.75rem;">#${item.id}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // Require Passcode Auth
   requireAdminAuth(onSuccessCallback) {
     if (this.isAdminAuthenticated) {
       onSuccessCallback();
@@ -284,7 +436,7 @@ class TradingJournalApp {
     } else {
       lockBadge.innerHTML = '🔒 Locked';
       lockBadge.style.color = 'var(--text-muted)';
-      securityBadge.innerHTML = 'SECURE JOURNAL';
+      securityBadge.innerHTML = 'LIVE SYNCED';
       securityBadge.style.color = 'var(--accent-gold)';
       document.body.classList.remove('admin-unlocked');
     }
@@ -298,7 +450,6 @@ class TradingJournalApp {
       this.renderFeed();
     });
 
-    // Keyboard shortcut ⌘K / Ctrl+K
     window.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -309,13 +460,57 @@ class TradingJournalApp {
       }
     });
 
+    // Pocket Option Ledger Modal Launch
+    document.getElementById('btnPocketOptionLedger').addEventListener('click', () => {
+      document.getElementById('pocketLedgerModalOverlay').classList.remove('hidden');
+    });
+    document.getElementById('btnClosePocketLedger').addEventListener('click', () => {
+      document.getElementById('pocketLedgerModalOverlay').classList.add('hidden');
+    });
+
+    // CSV Import for Pocket Option
+    document.getElementById('importPoCsvInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        const lines = text.split(/\r?\n/).filter(Boolean);
+        if (lines.length <= 1) return;
+
+        const parsed = [];
+        for (let i = 1; i < lines.length; i++) {
+          const cols = lines[i].split(',');
+          if (cols.length >= 6) {
+            parsed.push({
+              id: cols[0].trim(),
+              date: cols[1].trim(),
+              amount: cols[2].trim(),
+              method: cols[3].trim(),
+              type: cols[4].trim(),
+              status: cols[5].trim(),
+              bonus: cols[6] ? cols[6].trim() : '$0'
+            });
+          }
+        }
+
+        if (parsed.length > 0) {
+          this.poDeposits = parsed;
+          this.savePoDeposits();
+          alert(`Successfully imported ${parsed.length} Pocket Option deposit/withdrawal transactions!`);
+        }
+      };
+      reader.readAsText(file);
+    });
+
     // Brand home click
     document.getElementById('brandHomeLink').addEventListener('click', (e) => {
       e.preventDefault();
       this.resetFilters();
     });
 
-    // Admin Security Lock Toggle Button
+    // Admin Auth Lock Toggle
     document.getElementById('btnAdminAuth').addEventListener('click', () => {
       if (this.isAdminAuthenticated) {
         this.isAdminAuthenticated = false;
@@ -400,7 +595,7 @@ class TradingJournalApp {
       this.downloadCurrentMarkdown();
     });
 
-    // Protected Admin Reader Controls (Edit & Delete)
+    // Protected Admin Reader Controls
     document.getElementById('btnEditEntry').addEventListener('click', () => {
       if (this.currentPost) {
         this.requireAdminAuth(() => {
@@ -480,7 +675,7 @@ class TradingJournalApp {
       this.savePostForm();
     });
 
-    // Protected Settings / Backup Modal
+    // Settings Modal
     document.getElementById('btnSettings').addEventListener('click', () => {
       this.requireAdminAuth(() => {
         document.getElementById('settingsModalOverlay').classList.remove('hidden');
@@ -505,7 +700,9 @@ class TradingJournalApp {
     document.getElementById('btnResetSeed').addEventListener('click', () => {
       if (confirm('Are you sure you want to reset to demo seed posts? Custom local entries will be overwritten.')) {
         this.posts = DEFAULT_POSTS;
+        this.poDeposits = DEFAULT_PO_DEPOSITS;
         this.savePosts();
+        this.savePoDeposits();
         this.renderFeed();
         document.getElementById('settingsModalOverlay').classList.add('hidden');
       }
@@ -861,10 +1058,10 @@ class TradingJournalApp {
     this.closeReader();
     this.closeEditor();
     this.closePasscodeModal();
+    document.getElementById('pocketLedgerModalOverlay').classList.add('hidden');
     document.getElementById('settingsModalOverlay').classList.add('hidden');
   }
 
-  // Lightweight Markdown Renderer
   renderMarkdown(md) {
     if (!md) return '';
 
@@ -873,41 +1070,31 @@ class TradingJournalApp {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;");
 
-    // Code blocks ```...```
     html = html.replace(/```([\s\S]*?)```/g, function(match, p1) {
       return `<pre><code>${p1.trim()}</code></pre>`;
     });
 
-    // Headers
     html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
 
-    // Horizontal rules
     html = html.replace(/^---$/gim, '<hr>');
 
-    // Blockquotes
     html = html.replace(/^&gt;\s?(.*$)/gim, '<blockquote>$1</blockquote>');
 
-    // Checklists
     html = html.replace(/^- \[ \] (.*$)/gim, '<li style="list-style:none;">🏽 $1</li>');
     html = html.replace(/^- \[x\] (.*$)/gim, '<li style="list-style:none;">✅ $1</li>');
 
-    // Bold & Italic
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-    // Inline Code
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Dollar Tickers
     html = html.replace(/(\$[A-Z0-9]+)/g, '<span class="ticker-tag">$1</span>');
 
-    // Lists
     html = html.replace(/^\* (.*$)/gim, '<li>$1</li>');
     html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
 
-    // Paragraph wrapping
     const blocks = html.split(/\n\n+/);
     return blocks.map(block => {
       const trimmed = block.trim();
