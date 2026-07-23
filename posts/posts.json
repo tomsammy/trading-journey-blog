@@ -1,5 +1,16 @@
 [
   {
+    "id": "2026-07-23-session-recap",
+    "filename": "2026-07-23-session-recap.md",
+    "title": "Daily Recap: High-Precision Session (+69.85% Win Rate, +$92.80 Net Profit)",
+    "date": "2026-07-23",
+    "category": "Daily Recap",
+    "tickers": ["$POCKETOPTION", "$EURUSD", "$AUDCHF", "$AUDUSD"],
+    "outcome": "Win",
+    "readTime": "4 min",
+    "excerpt": "Syncing latest Pocket Option trades from Google Sheet: 137 trades executed, 95 Wins / 41 Losses, generating +$92.80 in net profit."
+  },
+  {
     "id": "2026-07-22-pocket-option-critical-analysis",
     "filename": "2026-07-22-pocket-option-critical-analysis.md",
     "title": "Critical Deep Dive: Quantitative Analysis of 2,836 Pocket Option Executions",
