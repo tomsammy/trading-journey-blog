@@ -28,6 +28,56 @@ const DEFAULT_PO_DEPOSITS = [
 
 const DEFAULT_POSTS = [
   {
+    id: "2026-07-23-session-recap",
+    title: "Daily Recap: High-Precision Session (+69.85% Win Rate, +$92.80 Net Profit)",
+    date: "2026-07-23",
+    category: "Daily Recap",
+    tickers: ["$POCKETOPTION", "$EURUSD", "$AUDCHF", "$AUDUSD"],
+    outcome: "Win",
+    readTime: "4 min",
+    excerpt: "Syncing latest Pocket Option trades from Google Sheet: 137 trades executed, 95 Wins / 41 Losses, generating +$92.80 in net profit.",
+    content: `# Daily Recap: High-Precision Session (+69.85% Win Rate, +$92.80 Net Profit)
+
+> **Data Source:** Live sync from Pocket Option Google Sheet export (\`2026-07-23\` session log).
+
+---
+
+### Session Performance Summary
+
+* **Date:** 2026-07-23 (Early Morning Asian / London Prep Session)
+* **Total Executions Logged:** 137 trades
+* **Wins:** **95** | **Losses:** 41 | **Refunds:** 1
+* **Session Win Rate:** **69.85%**
+* **Total Volume Staked:** **$274.00**
+* **Net Realized PnL:** **+$92.80 Profit**
+
+---
+
+### Key Execution Highlights
+
+1. **System Consistency:**
+   - Position sizing remained strictly capped at **$2.00 per binary option trade**.
+   - Total capital staked for the session: **$274.00** across 137 micro-executions.
+
+2. **Asset Concentration:**
+   - Primary focus pairs: **EUR/USD OTC** and **AUD/CHF OTC**.
+   - High win density observed during structural support/resistance retests between 03:00 UTC and 04:15 UTC.
+
+3. **Profit Curve Growth:**
+   - Cumulative net return on staked capital: **+33.87% ROI** for the session.
+
+\`\`\`
+2026-07-23 Session Metrics:
+[137 Trades] ---> [95 Wins (69.85%)] ---> [+$92.80 Net Profit]
+\`\`\`
+
+---
+
+### Takeaways & Process Continuation
+
+Today's session demonstrated how high accuracy (69.85%) combined with fixed position sizing ($2.00) produces a clean, linear profit curve with zero account equity spikes or dangerous drawdowns.`
+  },
+  {
     id: "2026-07-22-pocket-option-critical-analysis",
     title: "Critical Deep Dive: Quantitative Analysis of 2,836 Pocket Option Executions",
     date: "2026-07-22",
@@ -118,7 +168,7 @@ To immediately turn this dataset into a consistent profit curve:
 2. **Asset Focus & Blacklist**:
    - **Allowed Pairs:** \`AUD/CHF OTC\`, \`CAD/CHF OTC\`, \`AED/CNY OTC\`.
    - **Blacklisted Pairs:** \`CAD/JPY OTC\`, \`EUR/USD OTC\`, \`AUD/NZD OTC\`.
-3. **Single Order Entry Lock**: Max 1 trade per setup level. No multi-clicking or rapid re-entries within 60 seconds.
+3. **Single Order Entry Lock**: Max 1 trade per setup level. No multi-clicking or re-entries within 60 seconds.
 4. **Focus on PUT (Short) Setups**: Align entries with 5-minute bearish structure sweeps.`
   },
   {
@@ -379,7 +429,15 @@ class TradingJournalApp {
     const stored = localStorage.getItem('tape_trading_posts');
     if (stored) {
       try {
-        this.posts = JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        // Ensure 2026-07-23 recap is present
+        const hasToday = parsed.some(p => p.id === '2026-07-23-session-recap');
+        if (!hasToday) {
+          this.posts = [DEFAULT_POSTS[0], ...parsed];
+          this.savePosts();
+        } else {
+          this.posts = parsed;
+        }
       } catch (e) {
         console.error('Failed to parse local posts:', e);
         this.posts = DEFAULT_POSTS;
@@ -1287,7 +1345,6 @@ class TradingJournalApp {
       return `<pre><code>${p1.trim()}</code></pre>`;
     });
 
-    // Tables parsing
     html = html.replace(/^\|(.+)\|$/gim, function(match) {
       const cells = match.split('|').filter(c => c.trim() !== '');
       if (cells.every(c => c.includes('---'))) return '';
