@@ -216,165 +216,53 @@ Net Equity In:    $318.85
 3. **Daily Loss Lockout:** 3 consecutive loss trades = immediate platform logoff.`
   },
   {
-    id: "2026-07-22-discipline-and-pnl",
-    title: "Daily Recap: Clean Execution on $BTC Breakout & PnL Disconnect",
-    date: "2026-07-22",
-    category: "Daily Recap",
-    tickers: ["$BTC", "$ETH"],
-    outcome: "Win",
-    readTime: "3 min",
-    excerpt: "Capturing a 1:2.8 R:R long on Bitcoin following a clean Asian session consolidation breakout. Reflecting on detachment from dollar amounts.",
-    content: `# Daily Recap: Clean Execution on $BTC Breakout & PnL Disconnect
-
-### Trade Metrics
-* **Asset:** Bitcoin ($BTC / USD)
-* **Direction:** Long
-* **Risk/Reward:** 1 : 2.8 R:R
-* **PnL Outcome:** +2.68% Account Growth (Win)
-* **Session:** London Open (08:15 UTC)
-
----
-
-### Trade Walkthrough
-
-During the Asian session, $BTC established a tight 4-hour consolidation range between $64,200 and $64,800. Volume dropped significantly, building energy for an expansion move.
-
-At London open:
-1. **Sweep:** Price dipped down to $64,150, sweeping sell-side liquidity.
-2. **Reversal:** A sharp 15-minute bullish engulfing candle closed back inside the range at $64,520.
-3. **Entry:** Placed long limit at $64,480 on the minor retracement.
-4. **Target:** $65,950 (Previous Daily High).
-
-\`\`\`
-Trade Flow:
-[Sweep Liquidity @ $64,150] ---> [Engulfing Reversal @ $64,520] ---> [Target Hit @ $65,950]
-Risk: $200 (Stop at $64,050) | Reward: $560
-\`\`\`
-
-The trade hit the target smoothly within 2 hours and 40 minutes.
-
----
-
-### Psychological Note: Detaching from Money
-
-Today I tried a new exercise suggested in *Trading in the Zone* by Mark Douglas: **Hiding the Open PnL Display** on the trading software.
-
-Instead of staring at fluctuating dollar figures (which triggers fear and impulse to exit early), I only looked at **Price vs. Technical Levels**.
-
-#### Results:
-- Zero anxiety during minor pullbacks.
-- Didn't feel tempted to move the take-profit closer.
-- Executed the plan 100% mechanically.
-
-> **Mindset Mantra:** Focus on flawless process execution. The profit curve is simply a trailing byproduct of discipline.`
-  },
-  {
-    id: "2026-07-21-fomc-post-mortem",
-    title: "Post-Mortem: Misjudging FOMC Volatility on $EURUSD",
-    date: "2026-07-21",
-    category: "Post-Mortem",
-    tickers: ["$EURUSD"],
-    outcome: "Loss",
-    readTime: "5 min",
-    excerpt: "A breakdown of taking an early short on EUR/USD ahead of rate commentary. Analyzing entry mistakes and emotional control under pressure.",
-    content: `# Post-Mortem: Misjudging FOMC Volatility on $EURUSD
-
-### Executive Summary
-* **Ticker:** $EURUSD
-* **Direction:** Short
-* **Entry:** 1.08850 | **Stop Loss:** 1.09120 | **Take Profit:** 1.08200
-* **Result:** Stopped Out (-$240 / -0.96% Risk)
-* **Setup Confluence:** 4H Supply Zone + Bearish Divergence on RSI
-
----
-
-### Trade Context & Setup
-Ahead of the 14:00 EST FOMC Rate Decision, $EURUSD rallied into a key 4-hour resistance zone around 1.08850. The HTF trend had been consistently bearish, and I identified a liquidity pool resting above the previous daily high.
-
-My thesis was that central bank guidance would remain hawkish, pushing the Euro lower towards 1.08200.
-
-\`\`\`
-4H Chart Structure:
-1.09200 ----[ Liquidity Grab Target ]----
-1.08850 ----[ My Short Entry ]----------- (STOPPED OUT HERE @ 1.09120)
-1.08500 ----[ Fair Value Gap Support ]---
-1.08200 ----[ Take Profit Target ]-------
-\`\`\`
-
----
-
-### What Went Wrong?
-
-#### 1. Violating Pre-News Rules
-Although my rule states *stay flat within 30 minutes of high-impact news*, I entered 12 minutes before the release. I fell into the trap of trying to "predict" the initial spike rather than waiting for post-news market structure confirmation.
-
-#### 2. Spread Expansion & Whipsaw
-The initial knee-jerk reaction pushed price UP 35 pips to 1.09180 (sweeping stops), before collapsing 90 pips straight down to 1.07950. 
-Had I waited 15 minutes post-announcement, I could have caught the actual trend move downward with zero draw-down.
-
----
-
-### Key Takeaways & Action Items
-
-> **Lesson:** News events are designed to sweep liquidity on BOTH sides before revealing true direction. Never enter during the noise window.
-
-1. **New Mandate:** Blackout window extended to 45 minutes pre/post FOMC and NFP releases.
-2. **Order Type Shift:** Switch from Limit Orders to Stop-Limit or Confirmation Market Orders after price breaks structural pivots post-news.
-3. **Psychology Grade: B-**. I accepted the loss cleanly without revenge trading, which is progress compared to last month.`
-  },
-  {
-    id: "2026-07-20-day-1-trading-rules",
-    title: "Day 1: Establishing Immutable Trading Rules & System Hygiene",
+    id: "2026-07-20-pocket-option-rules",
+    title: "Day 1: Immutable Binary Options Rules & System Hygiene",
     date: "2026-07-20",
     category: "Strategy & Rules",
-    tickers: ["$SPX", "$EURUSD"],
+    tickers: ["$POCKETOPTION", "$EURUSD", "$AUDCHF"],
     outcome: "N/A",
     readTime: "4 min",
-    excerpt: "Setting up the core framework for risk management, max daily loss limits, and execution discipline before placing another order.",
-    content: `# Day 1: Establishing Immutable Trading Rules & System Hygiene
+    excerpt: "Setting up the core framework for binary option stake management, max daily loss limits, and execution discipline.",
+    content: `# Day 1: Immutable Binary Options Rules & System Hygiene
 
-> "The goal of a successful trader is to make the best trades. Money is secondary." — Alexander Elder
+> "The goal of a successful binary options trader is to execute setups mechanically. Profit is a byproduct of process."
 
-Today marks the official beginning of documenting my trading journey publicly and transparently. For the past several months, my biggest stumbling block hasn't been market analysis—it has been **discipline execution**, **over-trading after a loss**, and **scaling size out of frustration**.
+Today marks the official beginning of documenting my **Pocket Option & Binary Options** journey publicly and transparently.
 
-To eliminate emotional decisions, I am establishing five immutable trading rules that govern every single trade going forward.
-
----
-
-### Rule 1: Fixed Risk Per Trade (1.0% Maximum)
-No single trade will ever risk more than **1.0% of total equity**. 
-* If account size is $25,000, max risk is **$250**.
-* Stop-loss MUST be placed in the broker software BEFORE entry order submission.
-* Moving a stop-loss wider after entry is an instant failure event and mandates shutting down trading for the day.
+To eliminate emotional decisions and martingale tilt, I am establishing five immutable binary option trading rules that govern every single order.
 
 ---
 
-### Rule 2: Daily Max Drawdown Limit (-2.5%)
-If cumulative net PnL reaches **-2.5%** in a single trading session:
-1. All open positions must be market-closed immediately.
-2. Cancel all pending orders.
-3. Lock trading terminal for the remainder of the session.
-4. Go for a 30-minute walk and complete a Post-Mortem entry.
+### Rule 1: Fixed Position Sizing ($2.00 - 1.5% Stake)
+No single binary execution will exceed **1.5% of total account capital** ($2.00 fixed stake).
+* Avoid increasing stake size after a loss.
+* Martingale and double-up entries are strictly banned.
 
 ---
 
-### Rule 3: Quality Over Frequency (Max 3 Trades / Day)
-Over-trading degrades edge. I will restrict myself to high-confluence setups matching my primary strategy:
-- **Liquidity Sweep + Fair Value Gap (FVG) Retest** during London & NY Session Opens.
-- Minimum Risk-to-Reward Ratio: **1:2.0**.
+### Rule 2: Expiration Selection (Mandatory 5-Minute Expirations)
+- **Primary Expiration:** 5 Minutes (\`S300\`).
+- **Banned Expirations:** 60-Second (\`S60\`) and 120-Second (\`S120\`) trades due to noise and broker payout drag.
 
 ---
 
-### Rule 4: Mandatory Pre-Trade Checklist
-Before clicking \`BUY\` or \`SELL\`:
-- [ ] Is high-impact news scheduled within 30 minutes? (If yes, stay flat).
-- [ ] Is the stop-loss anchored to a structural swing high/low?
-- [ ] Am I calm, focused, and free from revenge sentiment?
+### Rule 3: Daily Drawdown Limit (3 Consecutive Losses = Shutdown)
+If 3 consecutive trades hit a loss in a session:
+1. Close the Pocket Option trading terminal immediately.
+2. Step away from charts for a minimum of 2 hours.
+3. Complete a Post-Mortem entry in this journal.
+
+---
+
+### Rule 4: Execution Hygiene (No Button-Smashing)
+- Strictly **1 binary execution per market level**.
+- No multi-clicking or placing multiple parallel orders within seconds.
 
 ---
 
 ### Looking Ahead
-Starting tomorrow, every execution will be logged here with entry reasons, chart context, and post-trade reflections. No exceptions.`
+Every Pocket Option execution will be logged and analyzed in this journal.`
   }
 ];
 
@@ -426,26 +314,9 @@ class TradingJournalApp {
   }
 
   loadPosts() {
-    const stored = localStorage.getItem('tape_trading_posts');
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        // Ensure 2026-07-23 recap is present
-        const hasToday = parsed.some(p => p.id === '2026-07-23-session-recap');
-        if (!hasToday) {
-          this.posts = [DEFAULT_POSTS[0], ...parsed];
-          this.savePosts();
-        } else {
-          this.posts = parsed;
-        }
-      } catch (e) {
-        console.error('Failed to parse local posts:', e);
-        this.posts = DEFAULT_POSTS;
-      }
-    } else {
-      this.posts = DEFAULT_POSTS;
-      this.savePosts();
-    }
+    // Force reset to pure Pocket Option / Binary Options posts
+    this.posts = DEFAULT_POSTS;
+    this.savePosts();
   }
 
   savePosts() {
@@ -1098,7 +969,7 @@ class TradingJournalApp {
               Read Journal Entry
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12" 5 19 12 12 19"></polyline>
+                <polyline points="12" 19 5 12 12 19"></polyline>
               </svg>
             </span>
           </div>

@@ -1,68 +1,33 @@
-# The Tape — Pure Text Trading Journal
+# THE TAPE — Pocket Option & Binary Options Journal
 
-A minimalist, high-typography, passcode-protected Trading Journal & Blog web application for documenting daily trading thoughts, market recaps, risk management rules, and trade post-mortems.
-
----
-
-## 🔒 Security & Passcode Protection
-
-The journal features **Master Passcode Authentication**:
-- Visitors can freely read, search, filter, copy, and download journal posts.
-- **Posting & Editing are Protected**: Anyone clicking **"+ New Entry"**, **"Edit Entry"**, **"Delete"**, or modifying backup settings MUST enter your **Admin Passcode**.
-- **Default Master Passcode**: `trader123` (Can be updated anytime inside the Security Settings modal).
+A minimalist, editorial dark-mode single-page static web application and blog built specifically to document **Pocket Option binary options trading journeys**, process discipline, trade execution logs, and cashflow analytics.
 
 ---
 
-## ✍️ How to Add Daily Posts
+## 🌟 Key Features
 
-### Option A: Using the In-Browser Studio (Passcode Protected)
-1. Open your blog.
-2. Click **"+ New Entry"** (or click **🔒 Locked** in the top navigation).
-3. Enter your Passcode (`trader123`).
-4. Fill in title, select category (*Daily Recap*, *Post-Mortem*, *Strategy & Rules*, *Psychology*), trade outcome, and tickers (`$EURUSD`, `$BTC`).
-5. Write your post in Markdown with live preview and click **Publish Entry**.
+1. **100% Pocket Option & Binary Options Focus**:
+   - Built specifically for logging Pocket Option binary trades, OTC market structure setups, and risk rules.
+   - All crypto/BTC and spot forex references removed.
+
+2. **Pocket Option Analytics Hub**:
+   - **Cashflow Ledger**: Real-time deposit ($735 deposited) & withdrawal ($416.15 withdrawn) tracking.
+   - **Trade History Executions (2,800+ Trades)**: Instant win rate %, Call/Put ratio, volume staked, net profit, and searchable trade table.
+   - **CSV Import Support**: Import new `export_history_*.csv` or deposit CSV files directly from Pocket Option.
+
+3. **Passcode Protection**:
+   - Visitors can read, search, and filter posts.
+   - Creating (`+ New Entry`), editing, deleting, or managing settings requires the author passcode (`trader123`).
+
+4. **Editorial Typography**:
+   - Built using Google Fonts (*Newsreader*, *Inter*, *JetBrains Mono*).
 
 ---
 
-### Option B: Adding `.md` Files to GitHub
-Create a file inside `posts/` (e.g., `posts/2026-07-23-gold-scalp.md`) with frontmatter metadata:
+## 🚀 Local Development
 
-```markdown
----
-title: Daily Recap: High-Probability Scalp on $GOLD
-date: 2026-07-23
-category: Daily Recap
-tickers: $GOLD
-outcome: Win
-readTime: 3 min
-excerpt: Brief summary of entry and exit points.
----
-
-# Your Heading
-
-Write your trading log here...
-```
-
-Push to GitHub:
+To run locally:
 ```bash
-git add .
-git commit -m "Add post for 2026-07-23"
-git push origin main
+python -m http.server 8080
 ```
-
----
-
-## 📁 Project Structure
-
-```
-trading-journey-blog/
-├── index.html          # Main application layout & passcode modal
-├── styles.css          # Dark-mode editorial design system & typography
-├── app.js              # State engine, passcode authentication & renderer
-├── README.md           # Documentation & passcode guide
-└── posts/              # Markdown trading journal posts
-    ├── posts.json
-    ├── 2026-07-20-day-1-trading-rules.md
-    ├── 2026-07-21-fomc-post-mortem.md
-    └── 2026-07-22-discipline-and-pnl.md
-```
+Then navigate to `http://localhost:8080` in your browser.

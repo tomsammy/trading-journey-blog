@@ -22,17 +22,6 @@
     "excerpt": "A comprehensive data analysis of 2,836 binary trades uncovering hidden statistical edges, money-draining assets, and the 5-minute expiry breakthrough."
   },
   {
-    "id": "2026-07-22-discipline-and-pnl",
-    "filename": "2026-07-22-discipline-and-pnl.md",
-    "title": "Daily Recap: Clean Execution on $BTC Breakout & PnL Disconnect",
-    "date": "2026-07-22",
-    "category": "Daily Recap",
-    "tickers": ["$BTC", "$ETH"],
-    "outcome": "Win",
-    "readTime": "3 min",
-    "excerpt": "Capturing a 1:2.8 R:R long on Bitcoin following a clean Asian session consolidation breakout. Reflecting on detachment from dollar amounts."
-  },
-  {
     "id": "2026-07-21-pocket-option-funding",
     "filename": "2026-07-21-pocket-option-funding.md",
     "title": "Pocket Option Capital Flow: Scaling with $500 Deposit & System Discipline",
@@ -44,25 +33,14 @@
     "excerpt": "Logging a major capital milestone on Pocket Option with a $500 bank transfer deposit and analyzing my capital flow metrics."
   },
   {
-    "id": "2026-07-21-fomc-post-mortem",
-    "filename": "2026-07-21-fomc-post-mortem.md",
-    "title": "Post-Mortem: Misjudging FOMC Volatility on $EURUSD",
-    "date": "2026-07-21",
-    "category": "Post-Mortem",
-    "tickers": ["$EURUSD"],
-    "outcome": "Loss",
-    "readTime": "5 min",
-    "excerpt": "A breakdown of taking an early short on EUR/USD ahead of rate commentary. Analyzing entry mistakes and emotional control under pressure."
-  },
-  {
-    "id": "2026-07-20-day-1-trading-rules",
-    "filename": "2026-07-20-day-1-trading-rules.md",
-    "title": "Day 1: Establishing Immutable Trading Rules & System Hygiene",
+    "id": "2026-07-20-pocket-option-rules",
+    "filename": "2026-07-20-pocket-option-rules.md",
+    "title": "Day 1: Immutable Binary Options Rules & System Hygiene",
     "date": "2026-07-20",
     "category": "Strategy & Rules",
-    "tickers": ["$SPX", "$EURUSD"],
+    "tickers": ["$POCKETOPTION", "$EURUSD", "$AUDCHF"],
     "outcome": "N/A",
     "readTime": "4 min",
-    "excerpt": "Setting up the core framework for risk management, max daily loss limits, and execution discipline before placing another order."
+    "excerpt": "Setting up the core framework for binary option stake management, max daily loss limits, and execution discipline."
   }
 ]
